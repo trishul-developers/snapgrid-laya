@@ -1,4 +1,4 @@
-name: Package & Release (Android APK & WebApp v0.2.1)
+name: Package & Release (Android APK & WebApp v0.2.2)
 
 on:
   push:
@@ -13,10 +13,10 @@ on:
         type: boolean
         default: true
       version_tag:
-        description: 'Release version tag (e.g., v0.2.1)'
+        description: 'Release version tag (e.g., v0.2.2)'
         required: false
         type: string
-        default: 'v0.2.1'
+        default: 'v0.2.2'
 
 permissions:
   contents: write
@@ -27,16 +27,16 @@ jobs:
   # JOB 1: Build Web App & PWA Package
   # =========================================================================
   build-webapp:
-    name: Build WebApp Package (v0.2.1)
+    name: Build WebApp Package (v0.2.2)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '22.x'
 
       - name: Install Dependencies
         run: |
@@ -67,16 +67,16 @@ jobs:
   # JOB 2: Build Android APK
   # =========================================================================
   build-android-apk:
-    name: Package Android APK (v0.2.1)
+    name: Package Android APK (v0.2.2)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '22.x'
 
       - name: Setup Java JDK 17
         uses: actions/setup-java@v4
@@ -107,10 +107,10 @@ jobs:
           fi
           npx cap sync android
 
-      - name: Configure Android Versioning (v0.2.1 / Code 3)
+      - name: Configure Android Versioning (v0.2.2 / Code 4)
         run: |
-          sed -i 's/versionCode [0-9]*/versionCode 3/' android/app/build.gradle
-          sed -i 's/versionName "[^"]*"/versionName "0.2.1"/' android/app/build.gradle
+          sed -i 's/versionCode [0-9]*/versionCode 4/' android/app/build.gradle
+          sed -i 's/versionName "[^"]*"/versionName "0.2.2"/' android/app/build.gradle
 
       - name: Build Android Debug APK
         working-directory: android

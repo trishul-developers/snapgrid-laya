@@ -1,0 +1,20 @@
+{
+  "name": "Laya - Snapgrid Block Puzzle",
+  "short_name": "Laya",
+  "version": "0.2.0",
+  "description": "Mindful, production-grade, 100% offline Material 3 block puzzle game with Laya Rhythm dissolution mechanics and multi-language Indian localization.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090D16",
+  "theme_color": "#090D16",
+  "categories": ["games", "puzzle"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

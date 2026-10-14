@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="blockBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="blockPink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB7185" />
+      <stop offset="100%" stop-color="#E11D48" />
+    </linearGradient>
+    <linearGradient id="blockAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="blockEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="blockPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="4" />
+
+  <!-- Material 3 Block Cluster -->
+  <g filter="url(#shadow)" transform="translate(68, 68)">
+    <!-- 2x2 Square (Amber) -->
+    <rect x="24" y="24" width="150" height="150" rx="20" fill="url(#blockAmber)" />
+    
+    <!-- 3-block L-shape (Blue) -->
+    <rect x="202" y="24" width="70" height="70" rx="16" fill="url(#blockBlue)" />
+    <rect x="202" y="104" width="70" height="70" rx="16" fill="url(#blockBlue)" />
+    <rect x="282" y="104" width="70" height="70" rx="16" fill="url(#blockBlue)" />
+
+    <!-- 1x3 Bar (Pink) -->
+    <rect x="24" y="202" width="70" height="150" rx="18" fill="url(#blockPink)" />
+
+    <!-- Z-shape (Emerald) -->
+    <rect x="122" y="202" width="70" height="70" rx="16" fill="url(#blockEmerald)" />
+    <rect x="202" y="202" width="70" height="70" rx="16" fill="url(#blockEmerald)" />
+    <rect x="202" y="282" width="70" height="70" rx="16" fill="url(#blockEmerald)" />
+    <rect x="282" y="282" width="70" height="70" rx="16" fill="url(#blockEmerald)" />
+
+    <!-- Single Dot Accent (Purple) -->
+    <rect x="122" y="282" width="70" height="70" rx="16" fill="url(#blockPurple)" />
+  </g>
+</svg>

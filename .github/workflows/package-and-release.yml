@@ -1,4 +1,4 @@
-name: Package & Release (Android APK & WebApp v0.2.0)
+name: Package & Release (Android APK & WebApp v0.2.1)
 
 on:
   push:
@@ -13,10 +13,10 @@ on:
         type: boolean
         default: true
       version_tag:
-        description: 'Release version tag (e.g., v0.2.0)'
+        description: 'Release version tag (e.g., v0.2.1)'
         required: false
         type: string
-        default: 'v0.2.0'
+        default: 'v0.2.1'
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
   # JOB 1: Build Web App & PWA Package
   # =========================================================================
   build-webapp:
-    name: Build WebApp Package
+    name: Build WebApp Package (v0.2.1)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
@@ -53,21 +53,21 @@ jobs:
         run: |
           mkdir -p release-artifacts
           cd dist
-          zip -r ../release-artifacts/laya-webapp-v0.2.0.zip .
+          zip -r ../release-artifacts/laya-webapp-v0.2.1.zip .
           cd ..
 
       - name: Upload WebApp Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: laya-webapp-v0.2.0
-          path: release-artifacts/laya-webapp-v0.2.0.zip
+          name: laya-webapp-v0.2.1
+          path: release-artifacts/laya-webapp-v0.2.1.zip
           retention-days: 30
 
   # =========================================================================
   # JOB 2: Build Android APK
   # =========================================================================
   build-android-apk:
-    name: Package Android APK (v0.2.0)
+    name: Package Android APK (v0.2.1)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
@@ -84,8 +84,10 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses & Prepare Build Tools
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
 
       - name: Install Dependencies
         run: |
@@ -105,10 +107,10 @@ jobs:
           fi
           npx cap sync android
 
-      - name: Configure Android Versioning (v0.2.0 / Code 2)
+      - name: Configure Android Versioning (v0.2.1 / Code 3)
         run: |
-          sed -i 's/versionCode [0-9]*/versionCode 2/' android/app/build.gradle
-          sed -i 's/versionName "[^"]*"/versionName "0.2.0"/' android/app/build.gradle
+          sed -i 's/versionCode [0-9]*/versionCode 3/' android/app/build.gradle
+          sed -i 's/versionName "[^"]*"/versionName "0.2.1"/' android/app/build.gradle
 
       - name: Build Android Debug APK
         working-directory: android
@@ -122,7 +124,7 @@ jobs:
           APK_PATH=$(find android/app/build/outputs/apk -name "*.apk" | head -n 1)
           if [ -f "$APK_PATH" ]; then
             echo "Found APK at: $APK_PATH"
-            cp "$APK_PATH" release-artifacts/Laya-v0.2.0.apk
+            cp "$APK_PATH" release-artifacts/Laya-v0.2.1.apk
           else
             echo "Error: APK not found in outputs directory!"
             exit 1
@@ -131,8 +133,8 @@ jobs:
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Laya-v0.2.0-apk
-          path: release-artifacts/Laya-v0.2.0.apk
+          name: Laya-v0.2.1-apk
+          path: release-artifacts/Laya-v0.2.1.apk
           retention-days: 30
 
   # =========================================================================
@@ -150,13 +152,13 @@ jobs:
       - name: Download WebApp Artifact
         uses: actions/download-artifact@v4
         with:
-          name: laya-webapp-v0.2.0
+          name: laya-webapp-v0.2.1
           path: release-files
 
       - name: Download Android APK Artifact
         uses: actions/download-artifact@v4
         with:
-          name: Laya-v0.2.0-apk
+          name: Laya-v0.2.1-apk
           path: release-files
 
       - name: Determine Release Tag
@@ -165,7 +167,7 @@ jobs:
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             TAG_NAME="${GITHUB_REF#refs/tags/}"
           else
-            TAG_NAME="${{ github.event.inputs.version_tag || 'v0.2.0' }}"
+            TAG_NAME="${{ github.event.inputs.version_tag || 'v0.2.1' }}"
           fi
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
@@ -177,23 +179,22 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release-files/Laya-v0.2.0.apk
-            release-files/laya-webapp-v0.2.0.zip
+            release-files/Laya-v0.2.1.apk
+            release-files/laya-webapp-v0.2.1.zip
           body: |
-            ## Laya - Snapgrid (v0.2.0)
+            ## Laya - Snapgrid (v0.2.1)
 
             *Laya* (लय: Rhythm / Dissolution) — A mindful, production-grade, 100% offline, ad-free Material 3 block puzzle game for Android mobile devices and web browsers with complete multi-language Indian localization.
 
             ### Downloads
-            * **Android APK (`.apk`):** Download `Laya-v0.2.0.apk` directly to your Android device and install.
-            * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v0.2.0.zip` to host on any static web server or run locally in any browser.
+            * **Android APK (`.apk`):** Download `Laya-v0.2.1.apk` directly to your Android device and install.
+            * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v0.2.1.zip` to host on any static web server or run locally in any browser.
 
-            ### What's New in v0.2.0
-            * **Rebrand to "Laya (Snapgrid)":** Inspired by Sanskrit *Laya* (dissolution and rhythm).
-            * **Offline Indian Localization (11 Languages):** Full offline translations for English, हिन्दी (Hindi), ಕನ್ನಡ (Kannada), தமிழ் (Tamil), తెలుగు (Telugu), മലയാളം (Malayalam), मराठी (Marathi), বাংলা (Bengali), ગુજરાતી (Gujarati), ਪੰਜਾਬੀ (Punjabi), and संस्कृतम् (Sanskrit).
-            * **Laya Rhythm (Cadence Meter):** Decaying cadence timer with dynamic `Laya Flow` multipliers up to 5x.
-            * **Session Persistence:** Auto-save on exit and instant resume when reopened.
-            * **Touch Ergonomics & Haptics:** 75px vertical offset above touch point and nuanced vibrations.
-            * **33-Piece Polyomino Pool:** Dots, bars, squares, L-corners, T-shapes, and Z/S blocks with zero piece rotation.
+            ### What's New in v0.2.1
+            * **Android CI Build Fix:** Replaced deprecated `android-actions/setup-android@v3` (which failed due to obsolete `sdkmanager tools`) with official runner pre-installed Android SDK and SDK 35 build tools.
+            * **Sanskrit Linguistic Purity for *Laya*:** Corrected "Laya Rhythm" redundancy across all 11 Indic languages; *Laya* (लय) correctly conveys cadence and dissolution without redundant English repetition.
+            * **Settings Language Navigation:** Prominent highlighted language selection box inside Settings dialog alongside top header quick switch button.
+            * **Vite WebSocket & HMR Stability:** Clean offline runtime without console connection errors.
+            * **11 Offline Indian Languages:** English, हिन्दी (Hindi), ಕನ್ನಡ (Kannada), தமிழ் (Tamil), తెలుగు (Telugu), മലയാളം (Malayalam), मराठी (Marathi), বাংলা (Bengali), ગુજરાતી (Gujarati), ਪੰਜਾਬੀ (Punjabi), and संस्कृतम् (Sanskrit).
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

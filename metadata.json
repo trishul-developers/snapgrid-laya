@@ -1,6 +1,6 @@
 {
   "name": "Laya - Snapgrid - Offline Mobile Block Puzzle",
-  "description": "Laya (Snapgrid) v0.2.0: A mindful, production-grade, 100% offline, ad-free Material 3 block puzzle game with Laya Rhythm dissolution mechanics, 11 offline Indian languages localization, dynamic cadence bonus, combo streaks, and local leaderboards.",
+  "description": "Laya (Snapgrid) v0.2.1: A mindful, production-grade, 100% offline, ad-free Material 3 block puzzle game with Sanskrit Laya dissolution mechanics, 11 offline Indian languages localization, dynamic cadence bonus, combo streaks, and local leaderboards.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

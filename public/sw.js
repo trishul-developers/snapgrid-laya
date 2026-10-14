@@ -1,5 +1,5 @@
-// BlockDrop M3 Service Worker (Offline Support v0.1)
-const CACHE_NAME = 'blockdrop-m3-v0.1';
+// Laya Snapgrid Service Worker (Offline Support v0.2.4)
+const CACHE_NAME = 'laya-snapgrid-v0.2.4';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

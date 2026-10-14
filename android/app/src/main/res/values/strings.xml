@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Laya Soul</string>
-    <string name="title_activity_main">Laya Soul</string>
-    <string name="package_name">com.blockdrop.m3</string>
-    <string name="custom_url_scheme">com.blockdrop.m3</string>
+    <string name="app_name">Laya</string>
+    <string name="title_activity_main">Laya</string>
+    <string name="package_name">com.laya.snapgrid</string>
+    <string name="custom_url_scheme">com.laya.snapgrid</string>
 </resources>

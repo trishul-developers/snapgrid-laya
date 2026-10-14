@@ -214,7 +214,8 @@ jobs:
             * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
 
             ### What's New in ${{ steps.release_info.outputs.tag_name }}
-            * **Android CI Build Fix:** Replaced deprecated `android-actions/setup-android@v3` (which failed due to obsolete `sdkmanager tools`) with official runner pre-installed Android SDK and SDK 36 build tools with Java 21.
+            * **Android Launch Fix:** Aligned the Capacitor launch activity and app identity with `com.laya.snapgrid`, preventing startup failure.
+            * **Web Startup Fix:** Corrected a JavaScript syntax error that prevented the game from initializing in browsers and Android WebView.
             * **Sanskrit Linguistic Purity for *Laya*:** Corrected "Laya Rhythm" redundancy across all 11 Indic languages; *Laya* (लय) correctly conveys cadence and dissolution without redundant English repetition.
             * **Settings Language Navigation:** Prominent highlighted language selection box inside Settings dialog alongside top header quick switch button.
             * **Vite WebSocket & HMR Stability:** Clean offline runtime without console connection errors.

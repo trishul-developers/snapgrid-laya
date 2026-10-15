@@ -3,7 +3,7 @@
   <h1>Laya Snapgrid</h1>
   <p>An offline, mindful block puzzle for the web and Android.</p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.3.0-0ea5e9" alt="Version 0.3.0" />
+    <img src="https://img.shields.io/badge/version-0.3.1-0ea5e9" alt="Version 0.3.1" />
     <img src="https://img.shields.io/badge/license-MIT-10b981" alt="MIT License" />
     <img src="https://img.shields.io/badge/languages-11-8b5cf6" alt="11 languages" />
   </p>
@@ -12,14 +12,15 @@
 ## App preview
 
 <div align="center">
-  <img src="docs/screenshots/laya-snapgrid-v0.3.0.png" width="360" alt="Laya Snapgrid gameplay on a mobile-sized screen" />
+  <img src="docs/screenshots/laya-snapgrid-v0.3.1.png" width="360" alt="Laya Snapgrid gameplay on a mobile-sized screen" />
 </div>
 
 ## Features
 
 - Offline-first gameplay with installable web app and Android builds.
 - 8×8, 10×10, and 12×12 boards; Easy and Hard modes.
-- 44 piece orientations, including two-step and three-step staircases.
+- 46 piece orientations, including two-step, three-step, and diagonal
+  staircases.
 - 11 Indian languages, synthesized sound, haptics, and selectable palettes.
 - One-move undo in Easy mode.
 - Local high-score leaderboard.
@@ -61,22 +62,29 @@ independently. A weight of `0` disables that orientation; higher weights make
 it more common. The chance for a piece is its weight divided by the sum of
 weights for all enabled pieces.
 
-Current weight defaults:
+Current per-orientation weights (each orientation of a group uses the listed weight):
 
 | Piece group | Weight per orientation |
 | --- | ---: |
-| 1×1 dot and 1×2 bars | 2 |
-| Small 2×2 corners | 1.5 |
-| 5-cell bars, large 3×3 corners, and 3-step staircases | 0.5 |
-| Other pieces, including 2-step staircases | 1 |
+| 1×1 dot, 1×2 bars, 2×2 squares, and small 2×2 corners | 2 |
+| 1×3 bars | 1.5 |
+| 1×4 bars, 3×3 squares, and five-cell cross | 1 |
+| L/J pieces | 0.75 |
+| 1×5 bars, large 3×3 corners, T/Z/S pieces, and diagonal stairs | 0.5 |
+| Four- and six-tile orthogonal staircases | 0 (disabled) |
+
+The two diagonal staircase pieces are the three-tile patterns `X../.X./..X`
+and `..X/.X./X..`; each currently has weight `0.5`. The older orthogonal
+staircase definitions remain in the catalog, with their spawn weights at `0`.
 
 Edit `SCORING_CONFIG` in the same file to adjust the score multiplier, points
 per tile, cadence bonus and maximum, line-clear base scores, and points for
-each line beyond four. Current defaults use a `0.2` multiplier and `10` raw
-placement points per tile. Line-clear base scores are 100, 300, 600, and 1,000
-raw points for one to four lines, plus 400 raw points for each additional line.
-The active combo streak multiplies line-clear score; displayed score is rounded
-down after applying the score multiplier.
+each line beyond four. The current score multiplier is **0.2** (not 0.3), with
+10 raw placement points per tile, resulting in 2 displayed points per tile.
+Line-clear base scores are 100, 300, 600, and 1,000 raw points for one to four
+lines, plus 400 raw points for each additional line. The active combo streak
+multiplies line-clear score; displayed score is rounded down after applying
+the score multiplier.
 
 ## Piece catalog
 
@@ -87,8 +95,9 @@ down after applying the score multiplier.
   four-cell L and J pieces.
 - T family: four T rotations and a five-cell cross.
 - Z/S family: horizontal and vertical Z and S, plus two-step and three-step
-  staircases in horizontal, mirrored horizontal, vertical, and mirrored
-  vertical orientations.
+  orthogonal staircases in horizontal, mirrored horizontal, vertical, and
+  mirrored vertical orientations; and two diagonal three-tile staircases
+  (`X../.X./..X` and `..X/.X./X..`).
 
 Rows and columns completed together count as separate cleared lines. Combos
 increase on consecutive line-clearing placements and reset after two

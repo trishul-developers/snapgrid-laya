@@ -16,7 +16,7 @@ export const SCORING_CONFIG = {
 };
 
       /* ==========================================================================
-         2. COMPREHENSIVE POLYOMINO POOL (44 ORIENTATIONS)
+         2. COMPREHENSIVE POLYOMINO POOL (46 ORIENTATIONS)
          ========================================================================== */
       export const PIECE_DEFINITIONS = [
         // 1x1 Dot
@@ -85,54 +85,60 @@ export const SCORING_CONFIG = {
         { id: 'stair_3_h', name: '3-Step Staircase', category: 'zshape', matrix: [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1]] },
         { id: 'stair_3_h_mirror', name: '3-Step Staircase', category: 'zshape', matrix: [[0, 0, 1, 1], [0, 1, 1, 0], [1, 1, 0, 0]] },
         { id: 'stair_3_v', name: '3-Step Staircase', category: 'zshape', matrix: [[1, 0, 0], [1, 1, 0], [0, 1, 1], [0, 0, 1]] },
-        { id: 'stair_3_v_mirror', name: '3-Step Staircase', category: 'zshape', matrix: [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0]] }
+        { id: 'stair_3_v_mirror', name: '3-Step Staircase', category: 'zshape', matrix: [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0]] },
+
+        // Diagonal three-tile staircases (two distinct orientations)
+        { id: 'stair_diag_down', name: 'Diagonal Staircase', category: 'zshape', matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]] },
+        { id: 'stair_diag_up', name: 'Diagonal Staircase', category: 'zshape', matrix: [[0, 0, 1], [0, 1, 0], [1, 0, 0]] }
       ];
 
       export const PIECE_SPAWN_WEIGHTS = {
         dot_1: 2,
         bar_h2: 2,
-        bar_h3: 1,
+        bar_h3: 1.5,
         bar_h4: 1,
         bar_h5: 0.5,
         bar_v2: 2,
-        bar_v3: 1,
+        bar_v3: 1.5,
         bar_v4: 1,
         bar_v5: 0.5,
-        sq_2x2: 1,
+        sq_2x2: 2,
         sq_3x3: 1,
-        corner_sm_1: 1.5,
-        corner_sm_2: 1.5,
-        corner_sm_3: 1.5,
-        corner_sm_4: 1.5,
+        corner_sm_1: 2,
+        corner_sm_2: 2,
+        corner_sm_3: 2,
+        corner_sm_4: 2,
         corner_lg_1: 0.5,
         corner_lg_2: 0.5,
         corner_lg_3: 0.5,
         corner_lg_4: 0.5,
-        l_4_1: 1,
-        l_4_2: 1,
-        l_4_3: 1,
-        l_4_4: 1,
-        j_4_1: 1,
-        j_4_2: 1,
-        j_4_3: 1,
-        j_4_4: 1,
-        t_down: 1,
-        t_up: 1,
-        t_right: 1,
-        t_left: 1,
+        l_4_1: 0.75,
+        l_4_2: 0.75,
+        l_4_3: 0.75,
+        l_4_4: 0.75,
+        j_4_1: 0.75,
+        j_4_2: 0.75,
+        j_4_3: 0.75,
+        j_4_4: 0.75,
+        t_down: 0.5,
+        t_up: 0.5,
+        t_right: 0.5,
+        t_left: 0.5,
         plus_5: 1,
-        z_h: 1,
-        z_v: 1,
-        s_h: 1,
-        s_v: 1,
-        stair_2_h: 1,
-        stair_2_h_mirror: 1,
-        stair_2_v: 1,
-        stair_2_v_mirror: 1,
-        stair_3_h: 0.5,
-        stair_3_h_mirror: 0.5,
-        stair_3_v: 0.5,
-        stair_3_v_mirror: 0.5
+        z_h: 0.5,
+        z_v: 0.5,
+        s_h: 0.5,
+        s_v: 0.5,
+        stair_2_h: 0,
+        stair_2_h_mirror: 0,
+        stair_2_v: 0,
+        stair_2_v_mirror: 0,
+        stair_3_h: 0,
+        stair_3_h_mirror: 0,
+        stair_3_v: 0,
+        stair_3_v_mirror: 0,
+        stair_diag_down: 0.5,
+        stair_diag_up: 0.5
       };
 
       /* Curated Palettes Definition */

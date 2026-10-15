@@ -1,5 +1,5 @@
-// Laya Snapgrid Service Worker (Offline Support v0.2.4)
-const CACHE_NAME = 'laya-snapgrid-v0.2.4';
+// Laya Snapgrid Service Worker (Offline Support v0.3.0)
+const CACHE_NAME = 'laya-snapgrid-v0.3.0';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -9,9 +9,21 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    (async () => {
+      const indexResponse = await fetch('/index.html');
+      if (!indexResponse.ok) {
+        throw new Error(`Unable to cache app shell: ${indexResponse.status}`);
+      }
+      const html = await indexResponse.clone().text();
+      const appAssets = Array.from(
+        html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g),
+        match => new URL(match[1], self.location.origin).href
+      );
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put('/index.html', indexResponse);
+      await cache.addAll([...ASSETS_TO_CACHE.filter(asset => asset !== '/index.html'), ...appAssets]);
+      await self.skipWaiting();
+    })()
   );
 });
 

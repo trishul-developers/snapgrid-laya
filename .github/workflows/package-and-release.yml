@@ -207,18 +207,19 @@ jobs:
           body: |
             ## Laya - Snapgrid (${{ steps.release_info.outputs.tag_name }})
 
-            *Laya* (लय: Rhythm / Dissolution) — A mindful, production-grade, 100% offline, ad-free Material 3 block puzzle game for Android mobile devices and web browsers with complete multi-language Indian localization.
+            *Laya* (लय: Rhythm / Dissolution) is an offline block puzzle for Android and web, with 11 Indian languages.
 
             ### Downloads
             * **Android APK (`.apk`):** Download `Laya-v${{ steps.app_version.outputs.version }}.apk` directly to your Android device and install.
             * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
 
             ### What's New in ${{ steps.release_info.outputs.tag_name }}
-            * **Android Launch Fix:** Aligned the Capacitor launch activity and app identity with `com.laya.snapgrid`, preventing startup failure.
-            * **Web Startup Fix:** Corrected a JavaScript syntax error that prevented the game from initializing in browsers and Android WebView.
-            * **Sanskrit Linguistic Purity for *Laya*:** Corrected "Laya Rhythm" redundancy across all 11 Indic languages; *Laya* (लय) correctly conveys cadence and dissolution without redundant English repetition.
-            * **Settings Language Navigation:** Prominent highlighted language selection box inside Settings dialog alongside top header quick switch button.
-            * **Vite WebSocket & HMR Stability:** Clean offline runtime without console connection errors.
-            * **11 Offline Indian Languages:** English, हिन्दी (Hindi), ಕನ್ನಡ (Kannada), தமிழ் (Tamil), తెలుగు (Telugu), മലയാളം (Malayalam), मराठी (Marathi), বাংলা (Bengali), ગુજરાતી (Gujarati), ਪੰਜਾਬੀ (Punjabi), and संस्कृतम् (Sanskrit).
+            * Added the 8×8 board option and simplified the language selector.
+            * Added two-step and three-step staircase pieces and tuned per-piece spawn weights.
+            * Added Easy-mode one-move undo and configurable scoring.
+            * Modularized the web app and updated offline caching for built assets.
+            * Includes 11 offline Indian languages.
+
+            Licensed under the MIT License.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

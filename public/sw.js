@@ -1,5 +1,5 @@
-// Laya Snapgrid Service Worker (Offline Support v0.3.1)
-const CACHE_NAME = 'laya-snapgrid-v0.3.1';
+// Laya Snapgrid Service Worker (Offline Support v0.3.2)
+const CACHE_NAME = 'laya-snapgrid-v0.3.2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

@@ -3,7 +3,7 @@
   <h1>Laya Snapgrid</h1>
   <p>An offline, mindful block puzzle for the web and Android.</p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.3.1-0ea5e9" alt="Version 0.3.1" />
+    <img src="https://img.shields.io/badge/version-0.3.2-0ea5e9" alt="Version 0.3.2" />
     <img src="https://img.shields.io/badge/license-MIT-10b981" alt="MIT License" />
     <img src="https://img.shields.io/badge/languages-11-8b5cf6" alt="11 languages" />
   </p>
@@ -19,7 +19,7 @@
 
 - Offline-first gameplay with installable web app and Android builds.
 - 8×8, 10×10, and 12×12 boards; Easy and Hard modes.
-- 46 piece orientations, including two-step, three-step, and diagonal
+- 48 piece orientations, including two-step, three-step, and diagonal
   staircases.
 - 11 Indian languages, synthesized sound, haptics, and selectable palettes.
 - One-move undo in Easy mode.
@@ -73,9 +73,11 @@ Current per-orientation weights (each orientation of a group uses the listed wei
 | 1×5 bars, large 3×3 corners, T/Z/S pieces, and diagonal stairs | 0.5 |
 | Four- and six-tile orthogonal staircases | 0 (disabled) |
 
-The two diagonal staircase pieces are the three-tile patterns `X../.X./..X`
-and `..X/.X./X..`; each currently has weight `0.5`. The older orthogonal
-staircase definitions remain in the catalog, with their spawn weights at `0`.
+The alternate two-step diagonal staircase uses the two-tile patterns `X./.X`
+and `.X/X.`; each currently has weight `0.5`. The three-step diagonal pieces
+are `X../.X./..X` and `..X/.X./X..`, also with weight `0.5` each. The older
+orthogonal staircase definitions remain in the catalog, with their spawn
+weights at `0`.
 
 Edit `SCORING_CONFIG` in the same file to adjust the score multiplier, points
 per tile, cadence bonus and maximum, line-clear base scores, and points for
@@ -96,7 +98,8 @@ the score multiplier.
 - T family: four T rotations and a five-cell cross.
 - Z/S family: horizontal and vertical Z and S, plus two-step and three-step
   orthogonal staircases in horizontal, mirrored horizontal, vertical, and
-  mirrored vertical orientations; and two diagonal three-tile staircases
+  mirrored vertical orientations; two diagonal two-tile staircases
+  (`X./.X` and `.X/X.`); and two diagonal three-tile staircases
   (`X../.X./..X` and `..X/.X./X..`).
 
 Rows and columns completed together count as separate cleared lines. Combos

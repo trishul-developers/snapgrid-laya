@@ -16,7 +16,7 @@ export const SCORING_CONFIG = {
 };
 
       /* ==========================================================================
-         2. COMPREHENSIVE POLYOMINO POOL (46 ORIENTATIONS)
+         2. COMPREHENSIVE POLYOMINO POOL (48 ORIENTATIONS)
          ========================================================================== */
       export const PIECE_DEFINITIONS = [
         // 1x1 Dot
@@ -87,6 +87,10 @@ export const SCORING_CONFIG = {
         { id: 'stair_3_v', name: '3-Step Staircase', category: 'zshape', matrix: [[1, 0, 0], [1, 1, 0], [0, 1, 1], [0, 0, 1]] },
         { id: 'stair_3_v_mirror', name: '3-Step Staircase', category: 'zshape', matrix: [[0, 0, 1], [0, 1, 1], [1, 1, 0], [1, 0, 0]] },
 
+        // Diagonal two-tile staircases (two distinct orientations)
+        { id: 'stair_diag_2_down', name: '2-Step Diagonal Staircase', category: 'zshape', matrix: [[1, 0], [0, 1]] },
+        { id: 'stair_diag_2_up', name: '2-Step Diagonal Staircase', category: 'zshape', matrix: [[0, 1], [1, 0]] },
+
         // Diagonal three-tile staircases (two distinct orientations)
         { id: 'stair_diag_down', name: 'Diagonal Staircase', category: 'zshape', matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]] },
         { id: 'stair_diag_up', name: 'Diagonal Staircase', category: 'zshape', matrix: [[0, 0, 1], [0, 1, 0], [1, 0, 0]] }
@@ -138,7 +142,9 @@ export const SCORING_CONFIG = {
         stair_3_v: 0,
         stair_3_v_mirror: 0,
         stair_diag_down: 0.5,
-        stair_diag_up: 0.5
+        stair_diag_up: 0.5,
+        stair_diag_2_down: 0.5,
+        stair_diag_2_up: 0.5
       };
 
       /* Curated Palettes Definition */

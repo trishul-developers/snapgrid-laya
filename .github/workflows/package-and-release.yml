@@ -214,10 +214,8 @@ jobs:
             * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
 
             ### What's New in ${{ steps.release_info.outputs.tag_name }}
-            * Added diagonal three-tile staircase pieces while retaining the existing orthogonal staircase shapes.
-            * Updated and validated per-piece spawn probabilities.
-            * Clarified current scoring and spawn-weight tuning in the README.
-            * Includes 8×8 boards, Easy-mode one-move undo, and 11 offline Indian languages.
+            * Added alternate two-tile diagonal staircase pieces in both orientations.
+            * Validated weighted piece selection against the updated 48-orientation catalog.
 
             Licensed under the MIT License.
         env:

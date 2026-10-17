@@ -41,23 +41,6 @@
             <path d="M5.5 13a8 8 0 1 0 2-5.5L3 12"></path>
           </svg>
         </button>
-        <button class="icon-btn" id="btn-theme" title="Toggle Theme" aria-label="Toggle Theme">
-          <svg viewBox="0 0 24 24" id="theme-icon-svg">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-        <button class="icon-btn" id="btn-sound" title="Toggle Sound" aria-label="Toggle Sound">
-          <svg viewBox="0 0 24 24" id="sound-icon-svg">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </button>
-        <button class="icon-btn" id="btn-vibrate" title="Toggle Haptics" aria-label="Toggle Haptics">
-          <svg viewBox="0 0 24 24" id="vibrate-icon-svg">
-            <path d="M18 8a6 6 0 0 1 0 8M22 6a10 10 0 0 1 0 12M2 8a6 6 0 0 0 0 8M6 6a10 10 0 0 0 0 12"></path>
-            <rect x="7" y="5" width="10" height="14" rx="2"></rect>
-          </svg>
-        </button>
         <button class="icon-btn" id="btn-leaderboard" title="Leaderboard" aria-label="Leaderboard">
           <svg viewBox="0 0 24 24">
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
@@ -117,6 +100,26 @@
     <div class="tray-container tray-4" id="tray-container">
       <!-- Tray slots generated via JavaScript -->
     </div>
+
+    <!-- Post Game-Over Board Review Banner -->
+    <div class="gameover-tray-banner" id="gameover-banner" hidden>
+      <div class="gameover-banner-content">
+        <div class="gameover-banner-text">
+          <span class="gameover-pulse-dot"></span>
+          <span class="gameover-banner-title" data-i18n="game_over">Game Over</span>
+          <span class="gameover-banner-sub" data-i18n="game_over_banner">Game Over • Tap below to play again</span>
+        </div>
+        <div class="gameover-banner-actions">
+          <button class="btn btn-primary btn-gameover-banner-restart" id="btn-banner-restart">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+            <span data-i18n="play_again">Play Again</span>
+          </button>
+          <button class="btn btn-tonal btn-gameover-banner-stats" id="btn-banner-stats" data-i18n="view_stats">
+            View Stats
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Drag Avatar (Positioned 75px above touch/cursor point) -->
@@ -154,6 +157,7 @@
       </div>
       <div class="dialog-actions">
         <button class="btn btn-primary" id="btn-play-again" data-i18n="play_again">Play Again</button>
+        <button class="btn btn-outline" id="btn-go-view-board" data-i18n="view_board">View Board</button>
         <button class="btn btn-tonal" id="btn-go-leaderboard" data-i18n="scores_btn">Scores</button>
       </div>
     </div>
@@ -208,191 +212,221 @@
         </button>
       </div>
       <div class="dialog-body">
-        <!-- Language Selector -->
-        <div class="setting-section-box lang-box">
-          <div class="setting-row language-setting-row">
-            <div class="setting-info">
-              <span class="setting-title" style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 1.15rem;">🌐</span>
-                <span data-i18n="language" style="font-weight: 800;">Language / भाषा</span>
-                <span class="m3-tag" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-size: 0.65rem; padding: 2px 7px;">11</span>
-              </span>
-              <span class="setting-desc" data-i18n="language_desc">100% Offline Indian Localization</span>
-            </div>
-            <select class="m3-select" id="setting-lang-select" aria-label="Language">
-              <option value="en">English</option>
-              <option value="hi">हिन्दी (Hindi)</option>
-              <option value="kn">ಕನ್ನಡ (Kannada)</option>
-              <option value="ta">தமிழ் (Tamil)</option>
-              <option value="te">తెలుగు (Telugu)</option>
-              <option value="ml">മലയാളം (Malayalam)</option>
-              <option value="mr">मराठी (Marathi)</option>
-              <option value="bn">বাংলা (Bengali)</option>
-              <option value="gu">ગુજરાતી (Gujarati)</option>
-              <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-              <option value="sa">संस्कृतम् (Sanskrit)</option>
-            </select>
+        <!-- Section 1: Game Rules -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <span class="section-icon">🎮</span>
+            <span class="section-title" data-i18n="game_rules">Game Rules</span>
           </div>
-
-        </div>
-
-        <!-- Grid Size Setting -->
-        <div class="setting-row board-size-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="grid_size">Board Grid Size</span>
-            <span class="setting-desc" data-i18n="grid_size_desc">8x8 Compact, 10x10 Classic, or 12x12 Extended</span>
-          </div>
-          <div class="segmented-control board-size-control">
-            <button class="segment-btn" id="seg-grid-8">8x8</button>
-            <button class="segment-btn active" id="seg-grid-10">10x10</button>
-            <button class="segment-btn" id="seg-grid-12">12x12</button>
-          </div>
-        </div>
-
-        <!-- Game Mode Setting -->
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="easy_mode">Refill Mechanic</span>
-            <span class="setting-desc" data-i18n="easy_mode_desc">Easy: Instant per slot | Hard: Batch refill</span>
-          </div>
-          <div class="segmented-control" style="width: 140px;">
-            <button class="segment-btn active" id="seg-mode-easy">Easy</button>
-            <button class="segment-btn" id="seg-mode-hard">Hard</button>
-          </div>
-        </div>
-
-        <!-- Tray Slot Count -->
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="slot_count">Piece Tray Slots</span>
-            <span class="setting-desc" data-i18n="slot_count_desc">3 slots (Tactical) or 4 slots (Casual)</span>
-          </div>
-          <div class="segmented-control" style="width: 140px;">
-            <button class="segment-btn" id="seg-slots-3" data-i18n="slots_3">3 Slots</button>
-            <button class="segment-btn active" id="seg-slots-4" data-i18n="slots_4">4 Slots</button>
-          </div>
-        </div>
-
-        <!-- Theme Setting -->
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="theme">Appearance Theme</span>
-            <span class="setting-desc" data-i18n="theme_desc">Material Light / AMOLED Dark</span>
-          </div>
-          <div class="segmented-control" style="width: 140px;">
-            <button class="segment-btn" id="seg-theme-light" data-i18n="light">Light</button>
-            <button class="segment-btn active" id="seg-theme-dark" data-i18n="dark">Dark</button>
-          </div>
-        </div>
-
-        <!-- Sound FX Toggle -->
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="sound">Sound Effects</span>
-            <span class="setting-desc" data-i18n="sound_desc">Synthesized retro/modern chimes</span>
-          </div>
-          <label class="m3-switch">
-            <input type="checkbox" id="switch-sound" checked />
-            <span class="switch-slider"></span>
-          </label>
-        </div>
-
-        <!-- Haptics Toggle -->
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-title" data-i18n="haptics">Haptic Feedback</span>
-            <span class="setting-desc" data-i18n="haptics_desc">Vibrate on pickup, drop & line clears</span>
-          </div>
-          <label class="m3-switch">
-            <input type="checkbox" id="switch-vibrate" checked />
-            <span class="switch-slider"></span>
-          </label>
-        </div>
-
-        <!-- Curated Palettes -->
-        <div style="display: flex; flex-direction: column; gap: 4px;">
-          <span class="setting-title" data-i18n="color_palette">Brick Color Palettes</span>
-          <div class="palette-grid">
-            <div class="palette-card active" data-palette="pastel">
-              <span class="palette-name">Material Pastel</span>
-              <div class="palette-swatches">
-                <div class="palette-swatch" style="background: #F43F5E;"></div>
-                <div class="palette-swatch" style="background: #0EA5E9;"></div>
-                <div class="palette-swatch" style="background: #EAB308;"></div>
-                <div class="palette-swatch" style="background: #10B981;"></div>
-                <div class="palette-swatch" style="background: #8B5CF6;"></div>
-                <div class="palette-swatch" style="background: #F97316;"></div>
+          <div class="settings-section-content">
+            <!-- Grid Size Setting -->
+            <div class="setting-row board-size-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="grid_size">Board Grid Size</span>
+                <span class="setting-desc" data-i18n="grid_size_desc">8x8 Compact, 10x10 Classic, or 12x12 Extended</span>
+              </div>
+              <div class="segmented-control board-size-control">
+                <button class="segment-btn" id="seg-grid-8">8x8</button>
+                <button class="segment-btn active" id="seg-grid-10">10x10</button>
+                <button class="segment-btn" id="seg-grid-12">12x12</button>
               </div>
             </div>
-            <div class="palette-card" data-palette="neon">
-              <span class="palette-name">Cyber Neon</span>
-              <div class="palette-swatches">
-                <div class="palette-swatch" style="background: #FF007F;"></div>
-                <div class="palette-swatch" style="background: #00F0FF;"></div>
-                <div class="palette-swatch" style="background: #FFE600;"></div>
-                <div class="palette-swatch" style="background: #39FF14;"></div>
-                <div class="palette-swatch" style="background: #B026FF;"></div>
-                <div class="palette-swatch" style="background: #FF5F1F;"></div>
+
+            <!-- Refill Mechanic -->
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="easy_mode">Refill Mechanic</span>
+                <span class="setting-desc" data-i18n="easy_mode_desc">Easy: Instant per slot | Hard: Batch refill</span>
+              </div>
+              <div class="segmented-control" style="width: 140px;">
+                <button class="segment-btn active" id="seg-mode-easy">Easy</button>
+                <button class="segment-btn" id="seg-mode-hard">Hard</button>
               </div>
             </div>
-            <div class="palette-card" data-palette="terracotta">
-              <span class="palette-name">Earthy Terracotta</span>
-              <div class="palette-swatches">
-                <div class="palette-swatch" style="background: #C85A32;"></div>
-                <div class="palette-swatch" style="background: #4E786B;"></div>
-                <div class="palette-swatch" style="background: #D4A373;"></div>
-                <div class="palette-swatch" style="background: #606C38;"></div>
-                <div class="palette-swatch" style="background: #8B5D33;"></div>
-                <div class="palette-swatch" style="background: #BC6C25;"></div>
+
+            <!-- Tray Slot Count -->
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="slot_count">Piece Tray Slots</span>
+                <span class="setting-desc" data-i18n="slot_count_desc">3 slots (Tactical) or 4 slots (Casual)</span>
               </div>
-            </div>
-            <div class="palette-card" data-palette="minimal">
-              <span class="palette-name">Monochrome</span>
-              <div class="palette-swatches">
-                <div class="palette-swatch" style="background: #94A3B8;"></div>
-                <div class="palette-swatch" style="background: #64748B;"></div>
-                <div class="palette-swatch" style="background: #CBD5E1;"></div>
-                <div class="palette-swatch" style="background: #475569;"></div>
-                <div class="palette-swatch" style="background: #334155;"></div>
-                <div class="palette-swatch" style="background: #1E293B;"></div>
+              <div class="segmented-control" style="width: 140px;">
+                <button class="segment-btn" id="seg-slots-3" data-i18n="slots_3">3 Slots</button>
+                <button class="segment-btn active" id="seg-slots-4" data-i18n="slots_4">4 Slots</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Custom Color Pickers -->
-        <details class="custom-color-details">
-          <summary data-i18n="custom_colors">Custom Category Colors</summary>
-          <div class="custom-colors-grid">
-            <div class="custom-color-item">
-              <span data-i18n="dot">Dot (1x1)</span>
-              <input type="color" id="picker-dot" value="#F43F5E" />
+        <!-- Section 2: Appearance -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <span class="section-icon">🎨</span>
+            <span class="section-title" data-i18n="appearance">Appearance</span>
+          </div>
+          <div class="settings-section-content">
+            <!-- Theme Setting -->
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="theme">Appearance Theme</span>
+                <span class="setting-desc" data-i18n="theme_desc">Material Light / AMOLED Dark</span>
+              </div>
+              <div class="segmented-control" style="width: 140px;">
+                <button class="segment-btn" id="seg-theme-light" data-i18n="light">Light</button>
+                <button class="segment-btn active" id="seg-theme-dark" data-i18n="dark">Dark</button>
+              </div>
             </div>
-            <div class="custom-color-item">
-              <span data-i18n="bar">Bars</span>
-              <input type="color" id="picker-bar" value="#0EA5E9" />
+
+            <!-- Curated Palettes -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span class="setting-title" data-i18n="color_palette">Brick Color Palettes</span>
+              <div class="palette-grid">
+                <div class="palette-card active" data-palette="pastel">
+                  <span class="palette-name">Material Pastel</span>
+                  <div class="palette-swatches">
+                    <div class="palette-swatch" style="background: #F43F5E;"></div>
+                    <div class="palette-swatch" style="background: #0EA5E9;"></div>
+                    <div class="palette-swatch" style="background: #EAB308;"></div>
+                    <div class="palette-swatch" style="background: #10B981;"></div>
+                    <div class="palette-swatch" style="background: #8B5CF6;"></div>
+                    <div class="palette-swatch" style="background: #F97316;"></div>
+                  </div>
+                </div>
+                <div class="palette-card" data-palette="neon">
+                  <span class="palette-name">Cyber Neon</span>
+                  <div class="palette-swatches">
+                    <div class="palette-swatch" style="background: #FF007F;"></div>
+                    <div class="palette-swatch" style="background: #00F0FF;"></div>
+                    <div class="palette-swatch" style="background: #FFE600;"></div>
+                    <div class="palette-swatch" style="background: #39FF14;"></div>
+                    <div class="palette-swatch" style="background: #B026FF;"></div>
+                    <div class="palette-swatch" style="background: #FF5F1F;"></div>
+                  </div>
+                </div>
+                <div class="palette-card" data-palette="terracotta">
+                  <span class="palette-name">Earthy Terracotta</span>
+                  <div class="palette-swatches">
+                    <div class="palette-swatch" style="background: #C85A32;"></div>
+                    <div class="palette-swatch" style="background: #4E786B;"></div>
+                    <div class="palette-swatch" style="background: #D4A373;"></div>
+                    <div class="palette-swatch" style="background: #606C38;"></div>
+                    <div class="palette-swatch" style="background: #8B5D33;"></div>
+                    <div class="palette-swatch" style="background: #BC6C25;"></div>
+                  </div>
+                </div>
+                <div class="palette-card" data-palette="minimal">
+                  <span class="palette-name">Monochrome</span>
+                  <div class="palette-swatches">
+                    <div class="palette-swatch" style="background: #94A3B8;"></div>
+                    <div class="palette-swatch" style="background: #64748B;"></div>
+                    <div class="palette-swatch" style="background: #CBD5E1;"></div>
+                    <div class="palette-swatch" style="background: #475569;"></div>
+                    <div class="palette-swatch" style="background: #334155;"></div>
+                    <div class="palette-swatch" style="background: #1E293B;"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="custom-color-item">
-              <span data-i18n="square">Squares</span>
-              <input type="color" id="picker-square" value="#EAB308" />
+
+            <!-- Custom Color Pickers -->
+            <details class="custom-color-details">
+              <summary data-i18n="custom_colors">Custom Category Colors</summary>
+              <div class="custom-colors-grid">
+                <div class="custom-color-item">
+                  <span data-i18n="dot">Dot (1x1)</span>
+                  <input type="color" id="picker-dot" value="#F43F5E" />
+                </div>
+                <div class="custom-color-item">
+                  <span data-i18n="bar">Bars</span>
+                  <input type="color" id="picker-bar" value="#0EA5E9" />
+                </div>
+                <div class="custom-color-item">
+                  <span data-i18n="square">Squares</span>
+                  <input type="color" id="picker-square" value="#EAB308" />
+                </div>
+                <div class="custom-color-item">
+                  <span data-i18n="corner">Corners / L</span>
+                  <input type="color" id="picker-corner" value="#10B981" />
+                </div>
+                <div class="custom-color-item">
+                  <span data-i18n="tshape">T-Shapes</span>
+                  <input type="color" id="picker-tshape" value="#8B5CF6" />
+                </div>
+                <div class="custom-color-item">
+                  <span data-i18n="zshape">Z / S Shapes</span>
+                  <input type="color" id="picker-zshape" value="#F97316" />
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Section 3: Audio & Feedback -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <span class="section-icon">🔊</span>
+            <span class="section-title" data-i18n="audio_feedback">Audio & Feedback</span>
+          </div>
+          <div class="settings-section-content">
+            <!-- Sound FX Toggle -->
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="sound">Sound Effects</span>
+                <span class="setting-desc" data-i18n="sound_desc">Synthesized retro/modern chimes</span>
+              </div>
+              <label class="m3-switch">
+                <input type="checkbox" id="switch-sound" checked />
+                <span class="switch-slider"></span>
+              </label>
             </div>
-            <div class="custom-color-item">
-              <span data-i18n="corner">Corners / L</span>
-              <input type="color" id="picker-corner" value="#10B981" />
-            </div>
-            <div class="custom-color-item">
-              <span data-i18n="tshape">T-Shapes</span>
-              <input type="color" id="picker-tshape" value="#8B5CF6" />
-            </div>
-            <div class="custom-color-item">
-              <span data-i18n="zshape">Z / S Shapes</span>
-              <input type="color" id="picker-zshape" value="#F97316" />
+
+            <!-- Haptics Toggle -->
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-i18n="haptics">Haptic Feedback</span>
+                <span class="setting-desc" data-i18n="haptics_desc">Vibrate on pickup, drop & line clears</span>
+              </div>
+              <label class="m3-switch">
+                <input type="checkbox" id="switch-vibrate" checked />
+                <span class="switch-slider"></span>
+              </label>
             </div>
           </div>
-        </details>
+        </div>
+
+        <!-- Section 4: Language -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="section-icon">🌐</span>
+              <span class="section-title" data-i18n="language">Language / भाषा</span>
+              <span class="m3-tag" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-size: 0.65rem; padding: 2px 7px;">11</span>
+            </div>
+          </div>
+          <div class="settings-section-content">
+            <div class="setting-row language-setting-row">
+              <div class="setting-info">
+                <span class="setting-desc" data-i18n="language_desc">100% Offline Indian Localization</span>
+              </div>
+              <select class="m3-select" id="setting-lang-select" aria-label="Language">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+                <option value="ml">മലയാളം (Malayalam)</option>
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="bn">বাংলা (Bengali)</option>
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+                <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="sa">संस्कृतम् (Sanskrit)</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         <!-- About / Version Footnote -->
-        <div style="text-align: center; font-size: 0.72rem; color: var(--md-sys-color-on-surface-variant); padding-top: 10px; border-top: 1px solid var(--md-sys-color-outline-variant); margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <div class="settings-footer-info">
           <span style="font-weight: 800; letter-spacing: 0.06em;">LAYA</span>
           <span>•</span>
           <span class="snapgrid-pill" style="font-size: 0.6rem; padding: 1px 6px;">SNAPGRID</span>
@@ -401,7 +435,8 @@
         </div>
       </div>
       <div class="dialog-actions">
-        <button class="btn btn-primary" id="btn-save-settings" data-i18n="done">Done</button>
+        <button class="btn btn-outline" id="btn-cancel-settings" data-i18n="cancel">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-settings" data-i18n="save_settings">Save & Apply</button>
       </div>
     </div>
   </div>

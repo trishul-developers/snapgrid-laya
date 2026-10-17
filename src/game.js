@@ -258,7 +258,11 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.headerGridTagEl = document.getElementById('header-grid-tag');
           this.headerModeTextEl = document.getElementById('header-mode-text');
           this.gameOverRestartEl = document.getElementById('btn-gameover-restart');
+          this.gameoverBannerEl = document.getElementById('gameover-banner');
           this.undoButtonEl = document.getElementById('btn-undo');
+          this.stagedSettings = null;
+          this.initialSettingsSnapshot = null;
+          this.pendingConfirmCancel = null;
 
           // Initialize Particle System
           this.particles = new ParticleSystem(document.getElementById('particle-canvas'));
@@ -560,7 +564,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
            ---------------------------------------------------------------------- */
         resetGame(forceFresh = false) {
           this.isGameOver = false;
-          this.gameOverRestartEl.hidden = true;
+          if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
+          if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
           if (forceFresh) {
             this.undoState = null;
             if (this.lineClearTimeout !== null) clearTimeout(this.lineClearTimeout);
@@ -966,124 +971,221 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             });
           }
 
-          document.getElementById('header-grid-tag').addEventListener('click', () => {
-            const gridSizes = [8, 10, 12];
-            const nextSize = gridSizes[(gridSizes.indexOf(this.gridSize) + 1) % gridSizes.length];
-            this.handleGridSettingChange(nextSize);
-          });
+          const headerGridTag = document.getElementById('header-grid-tag');
+          if (headerGridTag) {
+            headerGridTag.addEventListener('click', () => {
+              const gridSizes = [8, 10, 12];
+              const nextSize = gridSizes[(gridSizes.indexOf(this.gridSize) + 1) % gridSizes.length];
+              this.handleGridSettingChange(nextSize);
+            });
+          }
 
-          document.getElementById('header-mode-text').addEventListener('click', () => {
-            const nextMode = this.mode === 'easy' ? 'hard' : 'easy';
-            this.handleModeSettingChange(nextMode);
-          });
+          const headerModeText = document.getElementById('header-mode-text');
+          if (headerModeText) {
+            headerModeText.addEventListener('click', () => {
+              const nextMode = this.mode === 'easy' ? 'hard' : 'easy';
+              this.handleModeSettingChange(nextMode);
+            });
+          }
 
-          document.getElementById('btn-sound').addEventListener('click', () => {
-            sound.enabled = !sound.enabled;
-            this.updateSoundIcon();
-            this.saveStorage();
-          });
+          const btnSound = document.getElementById('btn-sound');
+          if (btnSound) {
+            btnSound.addEventListener('click', () => {
+              sound.enabled = !sound.enabled;
+              this.updateSoundIcon();
+              this.saveStorage();
+            });
+          }
 
-          document.getElementById('btn-vibrate').addEventListener('click', () => {
-            haptics.enabled = !haptics.enabled;
-            this.updateVibrateIcon();
-            this.saveStorage();
-          });
+          const btnVibrate = document.getElementById('btn-vibrate');
+          if (btnVibrate) {
+            btnVibrate.addEventListener('click', () => {
+              haptics.enabled = !haptics.enabled;
+              this.updateVibrateIcon();
+              this.saveStorage();
+            });
+          }
 
-          document.getElementById('btn-leaderboard').addEventListener('click', () => {
-            this.showLeaderboardModal();
-          });
+          const btnLeaderboard = document.getElementById('btn-leaderboard');
+          if (btnLeaderboard) {
+            btnLeaderboard.addEventListener('click', () => {
+              this.showLeaderboardModal();
+            });
+          }
 
-          document.getElementById('btn-settings').addEventListener('click', () => {
-            this.showSettingsModal();
-          });
+          const btnSettings = document.getElementById('btn-settings');
+          if (btnSettings) {
+            btnSettings.addEventListener('click', () => {
+              this.showSettingsModal();
+            });
+          }
 
-          document.getElementById('btn-restart').addEventListener('click', () => {
-            this.promptRestart(this.t('confirm_restart_title'), this.t('confirm_restart_msg'));
-          });
-          this.undoButtonEl.addEventListener('click', () => this.undoLastMove());
-          this.gameOverRestartEl.addEventListener('click', () => {
-            this.clearSavedGameState();
-            this.resetGame(true);
-          });
+          const btnRestart = document.getElementById('btn-restart');
+          if (btnRestart) {
+            btnRestart.addEventListener('click', () => {
+              this.promptRestart(this.t('confirm_restart_title'), this.t('confirm_restart_msg'));
+            });
+          }
+
+          if (this.undoButtonEl) {
+            this.undoButtonEl.addEventListener('click', () => this.undoLastMove());
+          }
+
+          if (this.gameOverRestartEl) {
+            this.gameOverRestartEl.addEventListener('click', () => {
+              if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
+              this.clearSavedGameState();
+              this.resetGame(true);
+            });
+          }
+
+          const btnBannerRestart = document.getElementById('btn-banner-restart');
+          if (btnBannerRestart) {
+            btnBannerRestart.addEventListener('click', () => {
+              if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
+              this.clearSavedGameState();
+              this.resetGame(true);
+            });
+          }
+
+          const btnBannerStats = document.getElementById('btn-banner-stats');
+          if (btnBannerStats) {
+            btnBannerStats.addEventListener('click', () => {
+              this.showStatsAfterReview();
+            });
+          }
 
           window.addEventListener('popstate', () => {
             const gameOverModal = document.getElementById('modal-gameover');
-            if (this.isGameOver && gameOverModal.classList.contains('open')) {
+            if (this.isGameOver && gameOverModal && gameOverModal.classList.contains('open')) {
               this.hideModals();
-              this.gameOverRestartEl.hidden = false;
+              if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = false;
+              if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
             }
           });
 
           // Modal Close Actions
-          document.getElementById('btn-close-leaderboard').addEventListener('click', () => this.hideModals());
-          document.getElementById('btn-close-lb-bottom').addEventListener('click', () => this.hideModals());
-          document.getElementById('btn-close-settings').addEventListener('click', () => this.hideModals());
-          document.getElementById('btn-save-settings').addEventListener('click', () => this.hideModals());
+          const btnCloseLeaderboard = document.getElementById('btn-close-leaderboard');
+          if (btnCloseLeaderboard) btnCloseLeaderboard.addEventListener('click', () => this.hideModals());
+          const btnCloseLbBottom = document.getElementById('btn-close-lb-bottom');
+          if (btnCloseLbBottom) btnCloseLbBottom.addEventListener('click', () => this.hideModals());
+
+          const btnCloseSettings = document.getElementById('btn-close-settings');
+          if (btnCloseSettings) btnCloseSettings.addEventListener('click', () => this.cancelSettings());
+          const btnCancelSettings = document.getElementById('btn-cancel-settings');
+          if (btnCancelSettings) btnCancelSettings.addEventListener('click', () => this.cancelSettings());
+          const btnSaveSettings = document.getElementById('btn-save-settings');
+          if (btnSaveSettings) btnSaveSettings.addEventListener('click', () => this.saveAndApplySettings());
+
           const settingLangSelect = document.getElementById('setting-lang-select');
           if (settingLangSelect) {
             settingLangSelect.addEventListener('change', (e) => {
+              if (this.stagedSettings) this.stagedSettings.lang = e.target.value;
               this.setLanguage(e.target.value);
             });
           }
 
-          document.getElementById('btn-play-again').addEventListener('click', () => {
-            this.hideModals();
-            this.clearSavedGameState();
-            this.resetGame(true);
-          });
-          document.getElementById('btn-go-leaderboard').addEventListener('click', () => {
-            this.hideModals();
-            this.showLeaderboardModal();
-          });
+          const btnPlayAgain = document.getElementById('btn-play-again');
+          if (btnPlayAgain) {
+            btnPlayAgain.addEventListener('click', () => {
+              this.hideModals();
+              if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
+              this.clearSavedGameState();
+              this.resetGame(true);
+            });
+          }
+
+          const btnGoViewBoard = document.getElementById('btn-go-view-board');
+          if (btnGoViewBoard) {
+            btnGoViewBoard.addEventListener('click', () => this.viewBoardAfterGameOver());
+          }
+
+          const btnGoLeaderboard = document.getElementById('btn-go-leaderboard');
+          if (btnGoLeaderboard) {
+            btnGoLeaderboard.addEventListener('click', () => {
+              this.hideModals();
+              this.showLeaderboardModal();
+            });
+          }
 
           // Leaderboard Segment Tabs
-          document.getElementById('lb-segmented-tabs').addEventListener('click', (e) => {
-            const btn = e.target.closest('.segment-btn');
-            if (!btn) return;
-            document.querySelectorAll('#lb-segmented-tabs .segment-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            this.renderLeaderboardList(btn.dataset.tab);
-          });
+          const lbSegmentedTabs = document.getElementById('lb-segmented-tabs');
+          if (lbSegmentedTabs) {
+            lbSegmentedTabs.addEventListener('click', (e) => {
+              const btn = e.target.closest('.segment-btn');
+              if (!btn) return;
+              document.querySelectorAll('#lb-segmented-tabs .segment-btn').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              this.renderLeaderboardList(btn.dataset.tab);
+            });
+          }
 
-          // Settings Controls
-          document.getElementById('seg-grid-8').addEventListener('click', () => this.handleGridSettingChange(8));
-          document.getElementById('seg-grid-10').addEventListener('click', () => this.handleGridSettingChange(10));
-          document.getElementById('seg-grid-12').addEventListener('click', () => this.handleGridSettingChange(12));
+          // Settings Controls (Staging)
+          const segGrid8 = document.getElementById('seg-grid-8');
+          if (segGrid8) segGrid8.addEventListener('click', () => this.stageGridSize(8));
+          const segGrid10 = document.getElementById('seg-grid-10');
+          if (segGrid10) segGrid10.addEventListener('click', () => this.stageGridSize(10));
+          const segGrid12 = document.getElementById('seg-grid-12');
+          if (segGrid12) segGrid12.addEventListener('click', () => this.stageGridSize(12));
 
-          document.getElementById('seg-mode-easy').addEventListener('click', () => this.handleModeSettingChange('easy'));
-          document.getElementById('seg-mode-hard').addEventListener('click', () => this.handleModeSettingChange('hard'));
+          const segModeEasy = document.getElementById('seg-mode-easy');
+          if (segModeEasy) segModeEasy.addEventListener('click', () => this.stageMode('easy'));
+          const segModeHard = document.getElementById('seg-mode-hard');
+          if (segModeHard) segModeHard.addEventListener('click', () => this.stageMode('hard'));
 
-          document.getElementById('seg-slots-3').addEventListener('click', () => this.handleSlotsSettingChange(3));
-          document.getElementById('seg-slots-4').addEventListener('click', () => this.handleSlotsSettingChange(4));
+          const segSlots3 = document.getElementById('seg-slots-3');
+          if (segSlots3) segSlots3.addEventListener('click', () => this.stageSlots(3));
+          const segSlots4 = document.getElementById('seg-slots-4');
+          if (segSlots4) segSlots4.addEventListener('click', () => this.stageSlots(4));
 
-          document.getElementById('seg-theme-light').addEventListener('click', () => {
-            this.applyTheme('light');
-            this.updateThemeIcon();
-            this.saveStorage();
-          });
-          document.getElementById('seg-theme-dark').addEventListener('click', () => {
-            this.applyTheme('dark');
-            this.updateThemeIcon();
-            this.saveStorage();
-          });
+          const segThemeLight = document.getElementById('seg-theme-light');
+          if (segThemeLight) {
+            segThemeLight.addEventListener('click', () => {
+              if (this.stagedSettings) this.stagedSettings.theme = 'light';
+              segThemeLight.classList.add('active');
+              const darkBtn = document.getElementById('seg-theme-dark');
+              if (darkBtn) darkBtn.classList.remove('active');
+              this.applyTheme('light');
+              this.updateThemeIcon();
+            });
+          }
+          const segThemeDark = document.getElementById('seg-theme-dark');
+          if (segThemeDark) {
+            segThemeDark.addEventListener('click', () => {
+              if (this.stagedSettings) this.stagedSettings.theme = 'dark';
+              segThemeDark.classList.add('active');
+              const lightBtn = document.getElementById('seg-theme-light');
+              if (lightBtn) lightBtn.classList.remove('active');
+              this.applyTheme('dark');
+              this.updateThemeIcon();
+            });
+          }
 
-          document.getElementById('switch-sound').addEventListener('change', (e) => {
-            sound.enabled = e.target.checked;
-            this.updateSoundIcon();
-            this.saveStorage();
-          });
+          const switchSound = document.getElementById('switch-sound');
+          if (switchSound) {
+            switchSound.addEventListener('change', (e) => {
+              if (this.stagedSettings) this.stagedSettings.sound = e.target.checked;
+              sound.enabled = e.target.checked;
+              this.updateSoundIcon();
+            });
+          }
 
-          document.getElementById('switch-vibrate').addEventListener('change', (e) => {
-            haptics.enabled = e.target.checked;
-            this.updateVibrateIcon();
-            this.saveStorage();
-          });
+          const switchVibrate = document.getElementById('switch-vibrate');
+          if (switchVibrate) {
+            switchVibrate.addEventListener('change', (e) => {
+              if (this.stagedSettings) this.stagedSettings.vibrate = e.target.checked;
+              haptics.enabled = e.target.checked;
+              this.updateVibrateIcon();
+            });
+          }
 
           // Palette selection
           document.querySelectorAll('.palette-card').forEach(card => {
             card.addEventListener('click', () => {
-              this.applyPalette(card.dataset.palette);
-              this.saveStorage();
+              const pal = card.dataset.palette;
+              if (this.stagedSettings) this.stagedSettings.palette = pal;
+              document.querySelectorAll('.palette-card').forEach(c => c.classList.toggle('active', c === card));
+              this.applyPalette(pal);
             });
           });
 
@@ -1091,22 +1193,40 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const categories = ['dot', 'bar', 'square', 'corner', 'tshape', 'zshape'];
           categories.forEach(cat => {
             const picker = document.getElementById(`picker-${cat}`);
-            picker.addEventListener('input', (e) => {
-              this.customColors[cat] = e.target.value;
-              this.applyPalette('custom');
-              this.saveStorage();
-            });
+            if (picker) {
+              picker.addEventListener('input', (e) => {
+                if (this.stagedSettings) {
+                  this.stagedSettings.customColors[cat] = e.target.value;
+                  this.stagedSettings.palette = 'custom';
+                }
+                this.customColors[cat] = e.target.value;
+                document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('active'));
+                this.applyPalette('custom');
+              });
+            }
           });
 
           // Confirm Modal Actions
-          document.getElementById('btn-confirm-cancel').addEventListener('click', () => this.hideModals());
-          document.getElementById('btn-confirm-ok').addEventListener('click', () => {
-            if (this.pendingConfirmAction) {
-              this.pendingConfirmAction();
-              this.pendingConfirmAction = null;
-            }
-            this.hideModals();
-          });
+          const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+          if (btnConfirmCancel) {
+            btnConfirmCancel.addEventListener('click', () => {
+              if (this.pendingConfirmCancel) {
+                this.pendingConfirmCancel();
+                this.pendingConfirmCancel = null;
+              }
+              this.hideModals();
+            });
+          }
+          const btnConfirmOk = document.getElementById('btn-confirm-ok');
+          if (btnConfirmOk) {
+            btnConfirmOk.addEventListener('click', () => {
+              if (this.pendingConfirmAction) {
+                this.pendingConfirmAction();
+                this.pendingConfirmAction = null;
+              }
+              this.hideModals();
+            });
+          }
 
           // Auto-save on exit, pagehide, and tab switch
           window.addEventListener('beforeunload', () => this.saveGameState());
@@ -1139,31 +1259,37 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
         updateSoundIcon() {
           const svg = document.getElementById('sound-icon-svg');
-          if (sound.enabled) {
-            svg.innerHTML = `
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>`;
-          } else {
-            svg.innerHTML = `
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <line x1="23" y1="9" x2="17" y2="15"></line>
-              <line x1="17" y1="9" x2="23" y2="15"></line>`;
+          if (svg) {
+            if (sound.enabled) {
+              svg.innerHTML = `
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>`;
+            } else {
+              svg.innerHTML = `
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>`;
+            }
           }
-          document.getElementById('switch-sound').checked = sound.enabled;
+          const switchSound = document.getElementById('switch-sound');
+          if (switchSound) switchSound.checked = sound.enabled;
         }
 
         updateVibrateIcon() {
           const svg = document.getElementById('vibrate-icon-svg');
-          if (haptics.enabled) {
-            svg.innerHTML = `
-              <path d="M18 8a6 6 0 0 1 0 8M22 6a10 10 0 0 1 0 12M2 8a6 6 0 0 0 0 8M6 6a10 10 0 0 0 0 12"></path>
-              <rect x="7" y="5" width="10" height="14" rx="2"></rect>`;
-          } else {
-            svg.innerHTML = `
-              <rect x="7" y="5" width="10" height="14" rx="2"></rect>
-              <line x1="1" y1="1" x2="23" y2="23"></line>`;
+          if (svg) {
+            if (haptics.enabled) {
+              svg.innerHTML = `
+                <path d="M18 8a6 6 0 0 1 0 8M22 6a10 10 0 0 1 0 12M2 8a6 6 0 0 0 0 8M6 6a10 10 0 0 0 0 12"></path>
+                <rect x="7" y="5" width="10" height="14" rx="2"></rect>`;
+            } else {
+              svg.innerHTML = `
+                <rect x="7" y="5" width="10" height="14" rx="2"></rect>
+                <line x1="1" y1="1" x2="23" y2="23"></line>`;
+            }
           }
-          document.getElementById('switch-vibrate').checked = haptics.enabled;
+          const switchVibrate = document.getElementById('switch-vibrate');
+          if (switchVibrate) switchVibrate.checked = haptics.enabled;
         }
 
         /* ----------------------------------------------------------------------
@@ -1683,7 +1809,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
            ---------------------------------------------------------------------- */
         triggerGameOver() {
           this.isGameOver = true;
-          this.gameOverRestartEl.hidden = true;
+          if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
+          if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
           this.clearSavedGameState();
           sound.gameOver();
           haptics.invalid();
@@ -1699,6 +1826,17 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           if (!window.history.state || !window.history.state.layaGameOver) {
             window.history.pushState({ layaGameOver: true }, '', window.location.href);
           }
+          document.getElementById('modal-gameover').classList.add('open');
+        }
+
+        viewBoardAfterGameOver() {
+          this.hideModals();
+          if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = false;
+          if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
+        }
+
+        showStatsAfterReview() {
+          if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
           document.getElementById('modal-gameover').classList.add('open');
         }
 
@@ -1747,29 +1885,224 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         }
 
         showSettingsModal() {
-          this.updateGridSizeSetting();
+          this.stagedSettings = {
+            gridSize: this.gridSize,
+            mode: this.mode,
+            slotCount: this.slotCount,
+            theme: this.theme,
+            sound: sound.enabled,
+            vibrate: haptics.enabled,
+            palette: this.activePalette,
+            customColors: { ...this.customColors },
+            lang: this.currentLang
+          };
+          this.initialSettingsSnapshot = {
+            ...this.stagedSettings,
+            customColors: { ...this.stagedSettings.customColors }
+          };
 
-          document.getElementById('seg-mode-easy').classList.toggle('active', this.mode === 'easy');
-          document.getElementById('seg-mode-hard').classList.toggle('active', this.mode === 'hard');
-
-          document.getElementById('seg-slots-3').classList.toggle('active', this.slotCount === 3);
-          document.getElementById('seg-slots-4').classList.toggle('active', this.slotCount === 4);
-
-          document.getElementById('switch-sound').checked = sound.enabled;
-          document.getElementById('switch-vibrate').checked = haptics.enabled;
-
-          const langSelect = document.getElementById('setting-lang-select');
-          if (langSelect) {
-            langSelect.value = this.currentLang;
-          }
-
+          this.renderSettingsDialog();
           document.getElementById('modal-settings').classList.add('open');
         }
 
+        renderSettingsDialog() {
+          const staged = this.stagedSettings || {
+            gridSize: this.gridSize,
+            mode: this.mode,
+            slotCount: this.slotCount,
+            theme: this.theme,
+            sound: sound.enabled,
+            vibrate: haptics.enabled,
+            palette: this.activePalette,
+            customColors: this.customColors,
+            lang: this.currentLang
+          };
+
+          const seg8 = document.getElementById('seg-grid-8');
+          const seg10 = document.getElementById('seg-grid-10');
+          const seg12 = document.getElementById('seg-grid-12');
+          if (seg8) seg8.classList.toggle('active', staged.gridSize === 8);
+          if (seg10) seg10.classList.toggle('active', staged.gridSize === 10);
+          if (seg12) seg12.classList.toggle('active', staged.gridSize === 12);
+
+          const segEasy = document.getElementById('seg-mode-easy');
+          const segHard = document.getElementById('seg-mode-hard');
+          if (segEasy) segEasy.classList.toggle('active', staged.mode === 'easy');
+          if (segHard) segHard.classList.toggle('active', staged.mode === 'hard');
+
+          const segSlots3 = document.getElementById('seg-slots-3');
+          const segSlots4 = document.getElementById('seg-slots-4');
+          if (segSlots3) segSlots3.classList.toggle('active', staged.slotCount === 3);
+          if (segSlots4) segSlots4.classList.toggle('active', staged.slotCount === 4);
+
+          const segThemeLight = document.getElementById('seg-theme-light');
+          const segThemeDark = document.getElementById('seg-theme-dark');
+          if (segThemeLight) segThemeLight.classList.toggle('active', staged.theme === 'light');
+          if (segThemeDark) segThemeDark.classList.toggle('active', staged.theme === 'dark');
+
+          const switchSound = document.getElementById('switch-sound');
+          if (switchSound) switchSound.checked = staged.sound;
+
+          const switchVibrate = document.getElementById('switch-vibrate');
+          if (switchVibrate) switchVibrate.checked = staged.vibrate;
+
+          document.querySelectorAll('.palette-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.palette === staged.palette);
+          });
+
+          const categories = ['dot', 'bar', 'square', 'corner', 'tshape', 'zshape'];
+          categories.forEach(cat => {
+            const picker = document.getElementById(`picker-${cat}`);
+            if (picker && staged.customColors && staged.customColors[cat]) {
+              picker.value = staged.customColors[cat];
+            }
+          });
+
+          const langSelect = document.getElementById('setting-lang-select');
+          if (langSelect) {
+            langSelect.value = staged.lang;
+          }
+        }
+
+        stageGridSize(size) {
+          if (!this.stagedSettings) return;
+          this.stagedSettings.gridSize = size;
+          const seg8 = document.getElementById('seg-grid-8');
+          const seg10 = document.getElementById('seg-grid-10');
+          const seg12 = document.getElementById('seg-grid-12');
+          if (seg8) seg8.classList.toggle('active', size === 8);
+          if (seg10) seg10.classList.toggle('active', size === 10);
+          if (seg12) seg12.classList.toggle('active', size === 12);
+        }
+
+        stageMode(mode) {
+          if (!this.stagedSettings) return;
+          this.stagedSettings.mode = mode;
+          this.stagedSettings.slotCount = mode === 'easy' ? 4 : 3;
+          const segEasy = document.getElementById('seg-mode-easy');
+          const segHard = document.getElementById('seg-mode-hard');
+          if (segEasy) segEasy.classList.toggle('active', mode === 'easy');
+          if (segHard) segHard.classList.toggle('active', mode === 'hard');
+
+          const segSlots3 = document.getElementById('seg-slots-3');
+          const segSlots4 = document.getElementById('seg-slots-4');
+          if (segSlots3) segSlots3.classList.toggle('active', this.stagedSettings.slotCount === 3);
+          if (segSlots4) segSlots4.classList.toggle('active', this.stagedSettings.slotCount === 4);
+        }
+
+        stageSlots(count) {
+          if (!this.stagedSettings) return;
+          this.stagedSettings.slotCount = count;
+          const segSlots3 = document.getElementById('seg-slots-3');
+          const segSlots4 = document.getElementById('seg-slots-4');
+          if (segSlots3) segSlots3.classList.toggle('active', count === 3);
+          if (segSlots4) segSlots4.classList.toggle('active', count === 4);
+        }
+
+        cancelSettings() {
+          if (this.initialSettingsSnapshot) {
+            this.theme = this.initialSettingsSnapshot.theme;
+            this.applyTheme(this.theme);
+            this.updateThemeIcon();
+            sound.enabled = this.initialSettingsSnapshot.sound;
+            this.updateSoundIcon();
+            haptics.enabled = this.initialSettingsSnapshot.vibrate;
+            this.updateVibrateIcon();
+            this.activePalette = this.initialSettingsSnapshot.palette;
+            this.customColors = { ...this.initialSettingsSnapshot.customColors };
+            this.applyPalette(this.activePalette);
+            if (this.currentLang !== this.initialSettingsSnapshot.lang) {
+              this.setLanguage(this.initialSettingsSnapshot.lang);
+            }
+          }
+          this.stagedSettings = null;
+          this.initialSettingsSnapshot = null;
+          this.hideModals();
+        }
+
+        saveAndApplySettings() {
+          if (!this.stagedSettings) {
+            this.hideModals();
+            return;
+          }
+
+          // Apply non-gameplay settings immediately without resetting the board
+          this.theme = this.stagedSettings.theme;
+          this.applyTheme(this.theme);
+          this.updateThemeIcon();
+
+          sound.enabled = this.stagedSettings.sound;
+          this.updateSoundIcon();
+
+          haptics.enabled = this.stagedSettings.vibrate;
+          this.updateVibrateIcon();
+
+          this.activePalette = this.stagedSettings.palette;
+          this.customColors = { ...this.stagedSettings.customColors };
+          this.applyPalette(this.activePalette);
+
+          if (this.currentLang !== this.stagedSettings.lang) {
+            this.setLanguage(this.stagedSettings.lang);
+          }
+
+          // Check if gameplay rules changed
+          const rulesChanged =
+            this.stagedSettings.gridSize !== this.gridSize ||
+            this.stagedSettings.mode !== this.mode ||
+            this.stagedSettings.slotCount !== this.slotCount;
+
+          if (!rulesChanged) {
+            this.saveStorage();
+            this.stagedSettings = null;
+            this.initialSettingsSnapshot = null;
+            this.hideModals();
+            return;
+          }
+
+          // Gameplay rules changed
+          const isBoardEmpty = this.board.every(row => row.every(cell => cell === 0));
+          const isUnplayed = (this.score === 0 && isBoardEmpty) || this.isGameOver;
+
+          const applyRules = () => {
+            this.gridSize = this.stagedSettings.gridSize;
+            this.mode = this.stagedSettings.mode;
+            this.slotCount = this.stagedSettings.slotCount;
+            this.clearSavedGameState();
+            this.resetGame(true);
+            this.saveStorage();
+            this.stagedSettings = null;
+            this.initialSettingsSnapshot = null;
+            this.hideModals();
+          };
+
+          if (isUnplayed) {
+            applyRules();
+          } else {
+            // Prompt once via modal-confirm
+            document.getElementById('confirm-title').textContent = this.t('confirm_restart_title');
+            document.getElementById('confirm-message').textContent = this.t('apply_restart_warning');
+            this.pendingConfirmAction = applyRules;
+            this.pendingConfirmCancel = () => {
+              if (this.stagedSettings) {
+                this.stagedSettings.gridSize = this.gridSize;
+                this.stagedSettings.mode = this.mode;
+                this.stagedSettings.slotCount = this.slotCount;
+              }
+              this.saveStorage();
+              this.stagedSettings = null;
+              this.initialSettingsSnapshot = null;
+            };
+            document.getElementById('modal-confirm').classList.add('open');
+          }
+        }
+
         updateGridSizeSetting() {
-          document.getElementById('seg-grid-8').classList.toggle('active', this.gridSize === 8);
-          document.getElementById('seg-grid-10').classList.toggle('active', this.gridSize === 10);
-          document.getElementById('seg-grid-12').classList.toggle('active', this.gridSize === 12);
+          const seg8 = document.getElementById('seg-grid-8');
+          const seg10 = document.getElementById('seg-grid-10');
+          const seg12 = document.getElementById('seg-grid-12');
+          if (seg8) seg8.classList.toggle('active', this.gridSize === 8);
+          if (seg10) seg10.classList.toggle('active', this.gridSize === 10);
+          if (seg12) seg12.classList.toggle('active', this.gridSize === 12);
         }
 
         hideModals() {
@@ -1788,26 +2121,42 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
         handleGridSettingChange(size) {
           if (this.gridSize === size) return;
-          this.promptRestart(this.t('change_grid_title'), this.t('change_grid_msg'));
-          this.pendingConfirmAction = () => {
+          const isBoardEmpty = this.board.every(row => row.every(cell => cell === 0));
+          const isUnplayed = (this.score === 0 && isBoardEmpty) || this.isGameOver;
+          const doChange = () => {
             this.clearSavedGameState();
             this.gridSize = size;
             this.updateGridSizeSetting();
             this.resetGame(true);
             this.saveStorage();
           };
+
+          if (isUnplayed) {
+            doChange();
+          } else {
+            this.promptRestart(this.t('change_grid_title'), this.t('change_grid_msg'));
+            this.pendingConfirmAction = doChange;
+          }
         }
 
         handleModeSettingChange(mode) {
           if (this.mode === mode) return;
-          this.promptRestart(this.t('change_mode_title'), this.t('change_mode_msg'));
-          this.pendingConfirmAction = () => {
+          const isBoardEmpty = this.board.every(row => row.every(cell => cell === 0));
+          const isUnplayed = (this.score === 0 && isBoardEmpty) || this.isGameOver;
+          const doChange = () => {
             this.clearSavedGameState();
             this.mode = mode;
             this.slotCount = mode === 'easy' ? 4 : 3;
             this.resetGame(true);
             this.saveStorage();
           };
+
+          if (isUnplayed) {
+            doChange();
+          } else {
+            this.promptRestart(this.t('change_mode_title'), this.t('change_mode_msg'));
+            this.pendingConfirmAction = doChange;
+          }
         }
 
         handleSlotsSettingChange(count) {

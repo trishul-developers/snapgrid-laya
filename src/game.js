@@ -2166,6 +2166,28 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.resetGame(true);
           this.saveStorage();
         }
+
+        showUpdateNotification(registration) {
+          if (document.getElementById('app-update-banner')) return;
+          const banner = document.createElement('div');
+          banner.id = 'app-update-banner';
+          banner.className = 'app-update-pill';
+          banner.setAttribute('role', 'alert');
+          banner.innerHTML = `
+            <span>🚀 ${this.t('update_available') || 'New version available!'}</span>
+            <button class="update-action-btn" id="btn-apply-update">${this.t('refresh') || 'Update'}</button>
+          `;
+          document.body.appendChild(banner);
+          const btn = document.getElementById('btn-apply-update');
+          if (btn) {
+            btn.addEventListener('click', () => {
+              if (registration && registration.waiting) {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+              }
+              window.location.reload();
+            });
+          }
+        }
       }
 
       // Bootstrap Game on Window Load
@@ -2175,9 +2197,35 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         if (window.game.updateSoundIcon) window.game.updateSoundIcon();
         if (window.game.updateVibrateIcon) window.game.updateVibrateIcon();
 
-        // Register Service Worker for Offline PWA Support
+        // Register Service Worker for Offline PWA Support with Over-the-Air Auto-Updates
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
+          navigator.serviceWorker.register('/sw.js').then((registration) => {
+            // Actively check for updates on startup & on focus
+            registration.update().catch(() => {});
+            document.addEventListener('visibilitychange', () => {
+              if (document.visibilityState === 'visible') {
+                registration.update().catch(() => {});
+              }
+            });
+
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    if (window.game && window.game.showUpdateNotification) {
+                      window.game.showUpdateNotification(registration);
+                    }
+                  }
+                });
+              }
+            });
+          }).catch(() => {});
+
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+          });
         }
       });
     })();
+

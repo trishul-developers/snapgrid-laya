@@ -1232,3 +1232,40 @@
       font-weight: 700;
       text-transform: uppercase;
     }
+
+    /* In-App Update Notification Banner */
+    .app-update-pill {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 8px) + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2500;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      padding: 7px 14px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      font-size: 0.8rem;
+      font-weight: 700;
+      animation: gameoverBannerFadeIn 0.25s ease-out;
+    }
+
+    .app-update-pill .update-action-btn {
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-primary);
+      border: none;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-weight: 800;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .app-update-pill .update-action-btn:active {
+      transform: scale(0.94);
+    }
+

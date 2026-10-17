@@ -1,5 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
-import {readFileSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync} from 'node:fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
@@ -13,6 +13,14 @@ export default defineConfig(() => {
         name: 'app-version',
         transformIndexHtml(html) {
           return html.replaceAll('__APP_VERSION__', version);
+        },
+        closeBundle() {
+          const swPath = path.resolve(import.meta.dirname, 'dist/sw.js');
+          if (existsSync(swPath)) {
+            let swContent = readFileSync(swPath, 'utf8');
+            swContent = swContent.replaceAll('__APP_VERSION__', version);
+            writeFileSync(swPath, swContent);
+          }
         },
       },
     ],

@@ -1,5 +1,5 @@
-// Laya Snapgrid Service Worker (Offline Support v0.3.2)
-const CACHE_NAME = 'laya-snapgrid-v0.3.2';
+// Laya Snapgrid Service Worker (Offline Support v__APP_VERSION__)
+const CACHE_NAME = 'laya-snapgrid-v__APP_VERSION__';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,7 +10,8 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
-      const indexResponse = await fetch('/index.html');
+      // Force fetching fresh app shell without HTTP cache on install
+      const indexResponse = await fetch('/index.html', { cache: 'no-cache' });
       if (!indexResponse.ok) {
         throw new Error(`Unable to cache app shell: ${indexResponse.status}`);
       }
@@ -41,8 +42,38 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  // 1. Navigation / HTML Requests: Network-First with Cache Fallback
+  // Guarantees that online users immediately receive new releases without needing
+  // to clear browser data, unregister the service worker, or reinstall.
+  if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
+    event.respondWith(
+      fetch(event.request)
+        .then(async (networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put('/index.html', networkResponse.clone());
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cached = await caches.match('/index.html') || await caches.match('/');
+          return cached || new Response('Offline - Laya Snapgrid', { status: 503, headers: { 'Content-Type': 'text/plain' } });
+        })
+    );
+    return;
+  }
+
+  // 2. Static Assets (JS, CSS, SVGs, Fonts): Cache-First with Network Fallback
+  // Immutable hashed assets load instantly from cache, falling back to network.
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -57,11 +88,6 @@ self.addEventListener('fetch', (event) => {
           cache.put(event.request, responseToCache);
         });
         return networkResponse;
-      }).catch(() => {
-        // Fallback to cached index.html for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
       });
     })
   );

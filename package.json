@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
+    "build": "vite build && cap sync",
     "build:webapp": "vite build",
     "cap:sync": "cap sync",
     "cap:build": "npm run build && cap sync",

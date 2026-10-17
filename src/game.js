@@ -132,8 +132,12 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
         resize() {
           const rect = this.canvas.parentElement.getBoundingClientRect();
-          this.canvas.width = rect.width;
-          this.canvas.height = rect.height;
+          const dpr = window.devicePixelRatio || 1;
+          this.dpr = dpr;
+          this.canvas.width = Math.round(rect.width * dpr);
+          this.canvas.height = Math.round(rect.height * dpr);
+          this.canvas.style.width = `${rect.width}px`;
+          this.canvas.style.height = `${rect.height}px`;
         }
 
         burst(x, y, color) {
@@ -160,6 +164,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
         update() {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          const dpr = this.dpr || 1;
           for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             p.x += p.vx;
@@ -177,7 +182,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.ctx.globalAlpha = p.alpha;
             this.ctx.fillStyle = p.color;
             this.ctx.beginPath();
-            this.ctx.roundRect ? this.ctx.roundRect(p.x, p.y, p.size, p.size, 2) : this.ctx.rect(p.x, p.y, p.size, p.size);
+            const px = p.x * dpr;
+            const py = p.y * dpr;
+            const pSize = p.size * dpr;
+            this.ctx.roundRect ? this.ctx.roundRect(px, py, pSize, pSize, 2 * dpr) : this.ctx.rect(px, py, pSize, pSize);
             this.ctx.fill();
             this.ctx.restore();
           }
@@ -266,9 +274,6 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.applyTheme(this.theme);
           this.applyPalette(this.activePalette);
           this.setLanguage(this.currentLang);
-
-          // Start Cadence Timer Loop
-          requestAnimationFrame((t) => this.tickCadence(t));
         }
 
         /* ----------------------------------------------------------------------
@@ -739,6 +744,9 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.cadenceBarEl.style.width = this.cadenceActive
             ? `${(this.cadenceRemaining / this.cadenceDuration) * 100}%`
             : '0%';
+          if (this.cadenceActive && this.cadenceRemaining > 0) {
+            this.startCadenceTimer();
+          }
           this.renderBoard();
           this.renderTray();
           this.updateBadges();
@@ -749,6 +757,31 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         refillFullTray() {
           for (let i = 0; i < this.slotCount; i++) {
             this.tray[i] = this.getRandomPiece();
+          }
+
+          if (this.mode === 'hard') {
+            const anyFits = this.tray.some(p => p && this.canPieceFitAnywhere(p));
+            if (!anyFits) {
+              const fittingTemplates = PIECE_DEFINITIONS.filter(def => this.canPieceFitAnywhere(def));
+              const fallbackTemplate = PIECE_DEFINITIONS.find(def => def.id === 'dot_1') || {
+                id: 'dot_1',
+                name: '1x1 Dot',
+                category: 'dot',
+                matrix: [[1]]
+              };
+              const chosenTemplate = fittingTemplates.length > 0
+                ? fittingTemplates[Math.floor(Math.random() * fittingTemplates.length)]
+                : fallbackTemplate;
+
+              const targetSlot = Math.floor(Math.random() * this.slotCount);
+              this.tray[targetSlot] = {
+                id: chosenTemplate.id,
+                name: chosenTemplate.name,
+                category: chosenTemplate.category,
+                matrix: chosenTemplate.matrix.map(row => [...row]),
+                color: this.getColorForCategory(chosenTemplate.category)
+              };
+            }
           }
         }
 
@@ -885,7 +918,9 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         setupEvents() {
           // Tray Slot Touch & Mouse Pickup
           const onStart = (e) => {
-            const touch = e.touches ? e.touches[0] : e;
+            if (this.isDragging) return;
+            const isTouch = !!(e.touches && e.touches.length);
+            const touch = isTouch ? e.touches[0] : e;
             const targetSlot = e.target.closest('.tray-slot');
             if (!targetSlot) return;
 
@@ -893,7 +928,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             if (isNaN(slotIdx) || !this.tray[slotIdx]) return;
 
             e.preventDefault();
-            this.startDrag(slotIdx, touch.clientX, touch.clientY);
+            this.startDrag(slotIdx, touch.clientX, touch.clientY, isTouch);
           };
 
           const onMove = (e) => {
@@ -1134,15 +1169,18 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         /* ----------------------------------------------------------------------
            Dragging Mechanics Implementation
            ---------------------------------------------------------------------- */
-        startDrag(slotIdx, clientX, clientY) {
+        startDrag(slotIdx, clientX, clientY, isTouch = false) {
           const piece = this.tray[slotIdx];
           if (!piece) return;
 
           this.isDragging = true;
+          this.isTouchDrag = !!isTouch;
           this.draggedSlotIndex = slotIdx;
           this.draggedPiece = piece;
           this.dragStartX = clientX;
           this.dragStartY = clientY;
+          this.lastTargetRow = null;
+          this.lastTargetCol = null;
 
           // Sound & Haptics
           sound.pickup();
@@ -1154,9 +1192,23 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             slotEl.style.opacity = '0.15';
           }
 
-          // Measure board cell dimensions using live child cell rects
+          // Cache board cell dimensions and strides once at drag start
           const firstCell = this.boardEl.children[0];
-          const cellWidth = firstCell ? firstCell.getBoundingClientRect().width : 28;
+          const secondCell = this.boardEl.children[1];
+          const nextRowCell = this.boardEl.children[this.gridSize];
+          const c0 = firstCell ? firstCell.getBoundingClientRect() : { left: 0, top: 0, width: 28 };
+          const cellWidth = c0.width || 28;
+          const strideX = (secondCell && c0) ? (secondCell.getBoundingClientRect().left - c0.left) : (cellWidth + 3);
+          const strideY = (nextRowCell && c0) ? (nextRowCell.getBoundingClientRect().top - c0.top) : (cellWidth + 3);
+
+          this.cachedGridGeometry = {
+            left: c0.left,
+            top: c0.top,
+            cellWidth,
+            strideX,
+            strideY
+          };
+          this.cachedBoardRect = this.boardEl.getBoundingClientRect();
 
           // Render Drag Avatar scaled to exact board cell dimensions
           const rows = piece.matrix.length;
@@ -1187,25 +1239,25 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         }
 
         getGridTargetCoords() {
-          const firstCell = this.boardEl.children[0];
-          const secondCell = this.boardEl.children[1];
-          const nextRowCell = this.boardEl.children[this.gridSize];
-          if (!firstCell || !secondCell || !nextRowCell) return { targetRow: -1, targetCol: -1 };
+          const geom = this.cachedGridGeometry;
+          if (!geom) return { targetRow: -1, targetCol: -1 };
 
-          const c0 = firstCell.getBoundingClientRect();
-          const strideX = secondCell.getBoundingClientRect().left - c0.left;
-          const strideY = nextRowCell.getBoundingClientRect().top - c0.top;
-
-          const targetCol = Math.round((this.avatarX - c0.left) / strideX);
-          const targetRow = Math.round((this.avatarY - c0.top) / strideY);
+          const targetCol = Math.round((this.avatarX - geom.left) / geom.strideX);
+          const targetRow = Math.round((this.avatarY - geom.top) / geom.strideY);
           return { targetRow, targetCol };
         }
 
         updateDrag(clientX, clientY) {
           if (!this.isDragging || !this.draggedPiece) return;
 
-          const firstCell = this.boardEl.children[0];
-          const cellWidth = firstCell ? firstCell.getBoundingClientRect().width : 28;
+          const geom = this.cachedGridGeometry || {
+            left: 0,
+            top: 0,
+            cellWidth: 28,
+            strideX: 31,
+            strideY: 31
+          };
+          const cellWidth = geom.cellWidth;
           const gap = this.gridSize === 12 ? 2 : 3;
 
           const rows = this.draggedPiece.matrix.length;
@@ -1213,20 +1265,28 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const avatarWidth = cols * cellWidth + (cols - 1) * gap;
           const avatarHeight = rows * cellWidth + (rows - 1) * gap;
 
-          // Ergonomic 75px vertical offset above finger/cursor touch point
+          // Desktop mouse: 0px offset (centered under cursor); Touch: 75px offset above finger
+          const verticalOffset = this.isTouchDrag ? 75 : 0;
           this.avatarX = clientX - avatarWidth / 2;
-          this.avatarY = clientY - avatarHeight / 2 - 75;
+          this.avatarY = clientY - avatarHeight / 2 - verticalOffset;
 
           this.avatarEl.style.transform = `translate3d(${this.avatarX}px, ${this.avatarY}px, 0)`;
 
           // Nearest Grid Coordinate Calculation
           const { targetRow, targetCol } = this.getGridTargetCoords();
 
-          // Render Ghost and Predictive Line Highlight
+          // Only update previews if grid coordinate has actually changed
+          if (targetRow === this.lastTargetRow && targetCol === this.lastTargetCol) {
+            return;
+          }
+          this.lastTargetRow = targetRow;
+          this.lastTargetCol = targetCol;
+
           this.clearPreviews();
 
           if (this.canPieceFitAt(this.draggedPiece, targetRow, targetCol)) {
             // Draw Ghost Cells
+            const categoryColor = this.getColorForCategory(this.draggedPiece.category);
             for (let pr = 0; pr < rows; pr++) {
               for (let pc = 0; pc < cols; pc++) {
                 if (this.draggedPiece.matrix[pr][pc] === 1) {
@@ -1235,8 +1295,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                   const cell = this.boardEl.children[br * this.gridSize + bc];
                   if (cell) {
                     cell.classList.add('ghost');
-                    cell.style.color = this.getColorForCategory(this.draggedPiece.category);
-                    cell.style.backgroundColor = this.getColorForCategory(this.draggedPiece.category);
+                    cell.style.color = categoryColor;
+                    cell.style.backgroundColor = categoryColor;
                   }
                 }
               }
@@ -1297,6 +1357,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.isDragging = false;
             this.draggedPiece = null;
             this.draggedSlotIndex = null;
+            this.cachedGridGeometry = null;
+            this.cachedBoardRect = null;
+            this.lastTargetRow = null;
+            this.lastTargetCol = null;
           } else {
             // Invalid placement - smoothly animate snap back to tray slot
             sound.snapInvalid();
@@ -1304,8 +1368,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
             const slotRect = slotEl ? slotEl.getBoundingClientRect() : null;
             if (slotRect) {
-              const firstCell = this.boardEl.children[0];
-              const cellWidth = firstCell ? firstCell.getBoundingClientRect().width : 28;
+              const cellWidth = this.cachedGridGeometry ? this.cachedGridGeometry.cellWidth : 28;
               const gap = this.gridSize === 12 ? 2 : 3;
               const rows = piece.matrix.length;
               const cols = piece.matrix[0].length;
@@ -1325,6 +1388,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                 this.isDragging = false;
                 this.draggedPiece = null;
                 this.draggedSlotIndex = null;
+                this.cachedGridGeometry = null;
+                this.cachedBoardRect = null;
+                this.lastTargetRow = null;
+                this.lastTargetCol = null;
               }, 200);
             } else {
               this.avatarEl.style.display = 'none';
@@ -1332,6 +1399,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               this.isDragging = false;
               this.draggedPiece = null;
               this.draggedSlotIndex = null;
+              this.cachedGridGeometry = null;
+              this.cachedBoardRect = null;
+              this.lastTargetRow = null;
+              this.lastTargetCol = null;
             }
           }
         }
@@ -1340,6 +1411,11 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
            Piece Placement & Scoring Logic
            ---------------------------------------------------------------------- */
         placePiece(piece, targetRow, targetCol, slotIdx) {
+          if (this.lineClearTimeout !== null) {
+            clearTimeout(this.lineClearTimeout);
+            this.lineClearTimeout = null;
+          }
+
           this.undoState = this.mode === 'easy' ? this.captureUndoState() : null;
           this.updateUndoButton();
 
@@ -1387,9 +1463,9 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.speedMultiplier = 1;
           }
 
-          // Reset Cadence Timer to 4.0 seconds
+          // Reset Cadence Timer to 4.0 seconds and start on-demand timer
           this.cadenceRemaining = this.cadenceDuration;
-          this.cadenceActive = true;
+          this.startCadenceTimer();
 
           // Floating base score
           this.showFloatingText(
@@ -1435,10 +1511,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             }
           }
 
+          // Render tray evaluated against already-cleared board state
           this.renderTray();
-          if (linesCleared === 0) {
-            this.saveGameState();
-          }
+          // Synchronously persist post-clear game state
+          this.saveGameState();
 
           // Strict Game Over Check
           this.pendingGameOverTimeout = setTimeout(() => {
@@ -1510,16 +1586,17 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
           this.updateBadges();
 
-          // After animation finishes, reset cleared board cells
+          // Immediately clear logical board cells synchronously
+          clearingSet.forEach(coord => {
+            const [r, c] = coord.split(',').map(Number);
+            this.board[r][c] = 0;
+            this.boardColors[r][c] = '';
+          });
+
+          // After visual animation finishes, synchronize DOM board cells
           this.lineClearTimeout = setTimeout(() => {
             this.lineClearTimeout = null;
-            clearingSet.forEach(coord => {
-              const [r, c] = coord.split(',').map(Number);
-              this.board[r][c] = 0;
-              this.boardColors[r][c] = '';
-            });
             this.renderBoard();
-            this.saveGameState();
           }, 280);
         }
 
@@ -1530,10 +1607,17 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const el = document.createElement('div');
           el.className = 'floating-score';
           el.textContent = text;
-          el.style.left = `${Math.max(20, Math.min(x, 320))}px`;
-          el.style.top = `${Math.max(20, Math.min(y, 300))}px`;
+          const boardRect = this.boardEl ? this.boardEl.getBoundingClientRect() : null;
+          const maxW = (boardRect && boardRect.width > 40) ? (boardRect.width - 20) : (window.innerWidth - 40);
+          const maxH = (boardRect && boardRect.height > 40) ? (boardRect.height - 20) : (window.innerHeight - 40);
+          el.style.left = `${Math.max(20, Math.min(x, maxW))}px`;
+          el.style.top = `${Math.max(20, Math.min(y, maxH))}px`;
           this.floatingLayerEl.appendChild(el);
           setTimeout(() => el.remove(), 850);
+        }
+
+        showFloatingScore(x, y, text) {
+          this.showFloatingText(x, y, text);
         }
 
         updateBadges() {
@@ -1557,22 +1641,38 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         /* ----------------------------------------------------------------------
            Soul Rhythm Cadence Timer Loop (requestAnimationFrame)
            ---------------------------------------------------------------------- */
+        startCadenceTimer() {
+          if (!this.cadenceActive) {
+            this.cadenceActive = true;
+            this.lastFrameTime = performance.now();
+            requestAnimationFrame((t) => this.tickCadence(t));
+          }
+        }
+
         tickCadence(now) {
+          if (!this.cadenceActive || this.cadenceRemaining <= 0) {
+            this.cadenceActive = false;
+            this.cadenceRemaining = 0;
+            this.speedMultiplier = 1;
+            this.updateBadges();
+            this.cadenceBarEl.style.width = '0%';
+            return;
+          }
+
           const dt = now - this.lastFrameTime;
           this.lastFrameTime = now;
 
-          if (this.cadenceActive && this.cadenceRemaining > 0) {
-            this.cadenceRemaining -= dt;
-            if (this.cadenceRemaining <= 0) {
-              this.cadenceRemaining = 0;
-              this.cadenceActive = false;
-              this.speedMultiplier = 1;
-              this.updateBadges();
-              this.cadenceBarEl.style.width = '0%';
-            } else {
-              const pct = (this.cadenceRemaining / this.cadenceDuration) * 100;
-              this.cadenceBarEl.style.width = `${pct}%`;
-            }
+          this.cadenceRemaining -= dt;
+          if (this.cadenceRemaining <= 0) {
+            this.cadenceRemaining = 0;
+            this.cadenceActive = false;
+            this.speedMultiplier = 1;
+            this.updateBadges();
+            this.cadenceBarEl.style.width = '0%';
+            return;
+          } else {
+            const pct = (this.cadenceRemaining / this.cadenceDuration) * 100;
+            this.cadenceBarEl.style.width = `${pct}%`;
           }
 
           requestAnimationFrame((t) => this.tickCadence(t));

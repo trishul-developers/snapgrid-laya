@@ -207,15 +207,20 @@ jobs:
           body: |
             ## Laya - Snapgrid (${{ steps.release_info.outputs.tag_name }})
 
-            *Laya* (लय: Rhythm / Dissolution) is an offline block puzzle for Android and web, with 11 Indian languages.
+            *Laya* (लय: Rhythm / Dissolution) is a 100% offline, ad-free mobile & web block puzzle game with 11 Indian localizations.
 
             ### Downloads
             * **Android APK (`.apk`):** Download `Laya-v${{ steps.app_version.outputs.version }}.apk` directly to your Android device and install.
             * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
 
             ### What's New in ${{ steps.release_info.outputs.tag_name }}
-            * Added alternate two-tile diagonal staircase pieces in both orientations.
-            * Validated weighted piece selection against the updated 48-orientation catalog.
+            * **Seamless Over-the-Air Updates:** Network-first service worker and in-app update pill allow clean updates without clearing cache or reinstalling.
+            * **Decluttered Header:** Streamlined top bar with 4 spacious in-game controls (Undo, Leaderboard, Settings, Restart).
+            * **Redesigned Settings:** Clean Material 3 sections with non-destructive "Save & Apply" staging (board is never interrupted for theme/audio/language changes).
+            * **Post Game-Over Board Review:** "View Board" mode allows inspecting the final state with a prominent restart banner.
+            * **Rebalanced Polyomino Spawning:** Boosted filler pieces (~55%) and reduced deadlock hazards (3x3 squares, 5-crosses) for smooth, zen gameplay.
+            * **Haptics & Battery:** Enabled Android vibration permission and stopped idle RAF cadence loops.
+            * **11 Languages:** 100% complete translations for Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Bengali, Gujarati, Punjabi, Sanskrit, and English.
 
             Licensed under the MIT License.
         env:

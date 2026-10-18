@@ -2389,6 +2389,13 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         // Register Service Worker for Offline PWA Support with Over-the-Air Auto-Updates
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
           navigator.serviceWorker.register('./sw.js').then((registration) => {
+            // Check if there is already a waiting worker from a previous background update
+            if (registration.waiting && navigator.serviceWorker.controller) {
+              if (window.game && window.game.showUpdateNotification) {
+                window.game.showUpdateNotification(registration);
+              }
+            }
+
             // Actively check for updates on startup & on focus
             registration.update().catch(() => {});
             document.addEventListener('visibilitychange', () => {
@@ -2411,7 +2418,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             });
           }).catch(() => {});
 
+          let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            refreshing = true;
             window.location.reload();
           });
         }

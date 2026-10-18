@@ -1,28 +1,64 @@
 // Laya Snapgrid Service Worker (Offline Support v__APP_VERSION__)
 const CACHE_NAME = 'laya-snapgrid-v__APP_VERSION__';
+
+const getRelativeUrl = (path) => new URL(path, self.location.href).href;
+
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
-      // Force fetching fresh app shell without HTTP cache on install
-      const indexResponse = await fetch('/index.html', { cache: 'no-cache' });
-      if (!indexResponse.ok) {
-        throw new Error(`Unable to cache app shell: ${indexResponse.status}`);
-      }
-      const html = await indexResponse.clone().text();
-      const appAssets = Array.from(
-        html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g),
-        match => new URL(match[1], self.location.origin).href
-      );
       const cache = await caches.open(CACHE_NAME);
-      await cache.put('/index.html', indexResponse);
-      await cache.addAll([...ASSETS_TO_CACHE.filter(asset => asset !== '/index.html'), ...appAssets]);
+      const appAssets = [];
+
+      try {
+        const indexUrl = getRelativeUrl('./index.html');
+        const indexResponse = await fetch(indexUrl, { cache: 'no-cache' });
+        if (indexResponse && indexResponse.ok) {
+          const html = await indexResponse.clone().text();
+          await cache.put(indexUrl, indexResponse.clone());
+          await cache.put(getRelativeUrl('./'), indexResponse);
+
+          const matches = Array.from(
+            html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g),
+            match => {
+              try {
+                return new URL(match[1], self.location.href).href;
+              } catch (e) {
+                return null;
+              }
+            }
+          ).filter(Boolean);
+
+          appAssets.push(...matches);
+        }
+      } catch (err) {
+        console.warn('[SW] App shell fetch error during install:', err);
+      }
+
+      const allUrls = Array.from(new Set([
+        ...ASSETS_TO_CACHE.map(p => getRelativeUrl(p)),
+        ...appAssets
+      ]));
+
+      await Promise.all(
+        allUrls.map(async (url) => {
+          try {
+            const res = await fetch(url, { cache: 'no-cache' });
+            if (res && res.ok) {
+              await cache.put(url, res);
+            }
+          } catch (e) {
+            console.warn('[SW] Failed to precache:', url, e);
+          }
+        })
+      );
+
       await self.skipWaiting();
     })()
   );
@@ -60,12 +96,15 @@ self.addEventListener('fetch', (event) => {
         .then(async (networkResponse) => {
           if (networkResponse && networkResponse.ok) {
             const cache = await caches.open(CACHE_NAME);
-            cache.put('/index.html', networkResponse.clone());
+            cache.put(event.request, networkResponse.clone());
+            cache.put(getRelativeUrl('./index.html'), networkResponse.clone());
           }
           return networkResponse;
         })
         .catch(async () => {
-          const cached = await caches.match('/index.html') || await caches.match('/');
+          const cached = await caches.match(event.request)
+            || await caches.match(getRelativeUrl('./index.html'))
+            || await caches.match(getRelativeUrl('./'));
           return cached || new Response('Offline - Laya Snapgrid', { status: 503, headers: { 'Content-Type': 'text/plain' } });
         })
     );

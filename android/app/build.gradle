@@ -11,6 +11,12 @@ if (versionParts.any { it > 999 }) {
 // Keep the Android version code monotonic using three decimal digits per SemVer component.
 def appVersionCode = versionParts[0] * 1000000 + versionParts[1] * 1000 + versionParts[2]
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.laya.snapgrid"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -27,8 +33,23 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                def storeFilePath = keystoreProperties['RELEASE_STORE_FILE']
+                def resolvedStoreFile = rootProject.file(storeFilePath).exists() ? rootProject.file(storeFilePath) : file(storeFilePath)
+                storeFile resolvedStoreFile
+                storePassword keystoreProperties['RELEASE_STORE_PASSWORD']
+                keyAlias keystoreProperties['RELEASE_KEY_ALIAS']
+                keyPassword keystoreProperties['RELEASE_KEY_PASSWORD']
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

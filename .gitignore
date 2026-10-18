@@ -14,3 +14,7 @@ android/build/
 android/.gradle/
 release-artifacts/
 release-files/
+
+*.jks
+*.keystore
+*keystore.properties

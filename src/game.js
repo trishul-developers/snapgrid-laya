@@ -235,6 +235,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.cadenceRemaining = 0;
           this.lastFrameTime = performance.now();
           this.cadenceActive = false;
+          this.cadenceRafId = null;
 
           // Dragging State
           this.draggedSlotIndex = null;
@@ -263,6 +264,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.undoButtonEl = document.getElementById('btn-undo');
           this.undoContainerEl = document.getElementById('undo-bar-container');
           this.settingsTopActionsEl = document.getElementById('settings-top-actions');
+          this.tutorialHintEl = document.getElementById('tutorial-hint-overlay');
+          this.tutorialDismissed = false;
           this.stagedSettings = null;
           this.initialSettingsSnapshot = null;
           this.pendingConfirmCancel = null;
@@ -399,6 +402,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         }
 
         clearSavedGameState() {
+          this.stopCadenceTimer();
           try {
             localStorage.removeItem('blockdrop_saved_game');
           } catch(e) {}
@@ -610,6 +614,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
            ---------------------------------------------------------------------- */
         resetGame(forceFresh = false) {
           this.isGameOver = false;
+          this.stopCadenceTimer();
           if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
           if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
           if (forceFresh) {
@@ -618,11 +623,18 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             if (this.pendingGameOverTimeout !== null) clearTimeout(this.pendingGameOverTimeout);
             this.lineClearTimeout = null;
             this.pendingGameOverTimeout = null;
+            this.tutorialDismissed = false;
           }
 
           let resumed = false;
           if (!forceFresh) {
             resumed = this.loadSavedGameState();
+          }
+
+          this.cadenceRemaining = 0;
+          this.cadenceActive = false;
+          if (this.cadenceBarEl) {
+            this.cadenceBarEl.style.width = '0%';
           }
 
           if (!resumed) {
@@ -637,15 +649,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.totalLines = 0;
             this.speedMultiplier = 1;
             this.speedPeak = 1;
-            this.cadenceRemaining = 0;
-            this.cadenceActive = false;
             this.colorBag = [];
 
             this.tray = Array(this.slotCount).fill(null);
             this.refillFullTray();
-          } else {
-            this.cadenceRemaining = 0;
-            this.cadenceActive = false;
           }
 
           this.currentScoreEl.textContent = this.score.toLocaleString();
@@ -676,9 +683,50 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.renderTray();
           this.saveStorage();
 
-          if (resumed && this.score > 0) {
+          if (resumed) {
+            this.dismissTutorialHint(true);
+            if (this.score > 0) {
+              setTimeout(() => {
+                this.showFloatingText(120, 60, `⚡ ${this.t('resumed_session')}`);
+              }, 300);
+            }
+          } else {
+            this.showTutorialHint();
+          }
+        }
+
+        showTutorialHint() {
+          if (this.tutorialDismissed) return;
+          if (this.score > 0) return;
+          const hasPiecesOnBoard = this.board && this.board.some(row => row.some(cell => cell === 1));
+          if (hasPiecesOnBoard) return;
+          if (!this.tutorialHintEl) {
+            this.tutorialHintEl = document.getElementById('tutorial-hint-overlay');
+          }
+          if (this.tutorialHintEl) {
+            this.tutorialHintEl.classList.add('visible');
+            this.tutorialHintEl.classList.remove('fade-out');
+          }
+        }
+
+        dismissTutorialHint(immediate = false) {
+          if (!this.tutorialHintEl) {
+            this.tutorialHintEl = document.getElementById('tutorial-hint-overlay');
+          }
+          if (this.tutorialDismissed && (!this.tutorialHintEl || !this.tutorialHintEl.classList.contains('visible'))) {
+            return;
+          }
+          this.tutorialDismissed = true;
+          if (!this.tutorialHintEl) return;
+          if (immediate) {
+            this.tutorialHintEl.classList.remove('visible', 'fade-out');
+          } else {
+            if (!this.tutorialHintEl.classList.contains('visible')) return;
+            this.tutorialHintEl.classList.add('fade-out');
             setTimeout(() => {
-              this.showFloatingText(120, 60, `⚡ ${this.t('resumed_session')}`);
+              if (this.tutorialHintEl) {
+                this.tutorialHintEl.classList.remove('visible', 'fade-out');
+              }
             }, 300);
           }
         }
@@ -781,6 +829,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         undoLastMove() {
           if (this.mode !== 'easy' || !this.undoState || this.isGameOver) return;
 
+          this.stopCadenceTimer();
+
           if (this.lineClearTimeout !== null) clearTimeout(this.lineClearTimeout);
           if (this.pendingGameOverTimeout !== null) clearTimeout(this.pendingGameOverTimeout);
           this.lineClearTimeout = null;
@@ -808,9 +858,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.cadenceActive = previous.cadenceActive;
 
           this.currentScoreEl.textContent = this.score.toLocaleString();
-          this.cadenceBarEl.style.width = this.cadenceActive
-            ? `${(this.cadenceRemaining / this.cadenceDuration) * 100}%`
-            : '0%';
+          const pct = this.cadenceActive && this.cadenceRemaining > 0
+            ? Math.max(0, Math.min(100, (this.cadenceRemaining / this.cadenceDuration) * 100))
+            : 0;
+          this.cadenceBarEl.style.width = `${pct}%`;
           if (this.cadenceActive && this.cadenceRemaining > 0) {
             this.startCadenceTimer();
           }
@@ -1031,6 +1082,10 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           window.addEventListener('touchend', onEnd);
           window.addEventListener('mouseup', onEnd);
           window.addEventListener('touchcancel', onEnd);
+
+          // User interaction dismisses tutorial hint
+          window.addEventListener('pointerdown', () => this.dismissTutorialHint(), { passive: true });
+          window.addEventListener('touchstart', () => this.dismissTutorialHint(), { passive: true });
 
           // Top Header Action Listeners
           const btnTheme = document.getElementById('btn-theme');
@@ -1378,6 +1433,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         startDrag(slotIdx, clientX, clientY, isTouch = false) {
           const piece = this.tray[slotIdx];
           if (!piece) return;
+
+          this.dismissTutorialHint();
 
           this.isDragging = true;
           this.isTouchDrag = !!isTouch;
@@ -1850,41 +1907,53 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         /* ----------------------------------------------------------------------
            Soul Rhythm Cadence Timer Loop (requestAnimationFrame)
            ---------------------------------------------------------------------- */
-        startCadenceTimer() {
-          if (!this.cadenceActive) {
-            this.cadenceActive = true;
-            this.lastFrameTime = performance.now();
-            requestAnimationFrame((t) => this.tickCadence(t));
+        stopCadenceTimer() {
+          if (this.cadenceRafId !== null) {
+            cancelAnimationFrame(this.cadenceRafId);
+            this.cadenceRafId = null;
           }
+          this.cadenceActive = false;
+        }
+
+        startCadenceTimer() {
+          if (this.cadenceRafId !== null) {
+            cancelAnimationFrame(this.cadenceRafId);
+            this.cadenceRafId = null;
+          }
+          this.cadenceActive = true;
+          this.lastFrameTime = performance.now();
+          this.cadenceRafId = requestAnimationFrame((t) => this.tickCadence(t));
         }
 
         tickCadence(now) {
           if (!this.cadenceActive || this.cadenceRemaining <= 0) {
             this.cadenceActive = false;
             this.cadenceRemaining = 0;
+            this.cadenceRafId = null;
             this.speedMultiplier = 1;
             this.updateBadges();
             this.cadenceBarEl.style.width = '0%';
             return;
           }
 
-          const dt = now - this.lastFrameTime;
+          const dt = Math.min(now - this.lastFrameTime, 100);
           this.lastFrameTime = now;
 
           this.cadenceRemaining -= dt;
           if (this.cadenceRemaining <= 0) {
             this.cadenceRemaining = 0;
             this.cadenceActive = false;
+            this.cadenceRafId = null;
             this.speedMultiplier = 1;
             this.updateBadges();
             this.cadenceBarEl.style.width = '0%';
             return;
           } else {
-            const pct = (this.cadenceRemaining / this.cadenceDuration) * 100;
+            const pct = Math.max(0, Math.min(100, (this.cadenceRemaining / this.cadenceDuration) * 100));
             this.cadenceBarEl.style.width = `${pct}%`;
           }
 
-          requestAnimationFrame((t) => this.tickCadence(t));
+          this.cadenceRafId = requestAnimationFrame((t) => this.tickCadence(t));
         }
 
         /* ----------------------------------------------------------------------
@@ -1892,6 +1961,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
            ---------------------------------------------------------------------- */
         triggerGameOver() {
           this.isGameOver = true;
+          this.stopCadenceTimer();
           if (this.gameOverRestartEl) this.gameOverRestartEl.hidden = true;
           if (this.gameoverBannerEl) this.gameoverBannerEl.hidden = true;
           this.clearSavedGameState();

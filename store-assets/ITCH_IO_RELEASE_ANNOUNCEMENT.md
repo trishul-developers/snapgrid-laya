@@ -1,4 +1,4 @@
-# 🧘 Laya (Snapgrid) — Mindful Block Puzzle (v0.4.4)
+# 🧘 Laya (Snapgrid) — Mindful Block Puzzle (v0.4.5)
 ### *100% Offline, Ad-Free Zen Puzzle Game with Sanskrit Dissolution Mechanics*
 
 > **Play Instantly in Browser** (HTML5) or **Download for Android** (.APK)  
@@ -50,11 +50,13 @@ Full native localization with zero external fonts or network dependencies:
 
 ---
 
-## 🚀 What's New in v0.4.4?
+## 🚀 What's New in v0.4.5?
 
-- ↺ **Dedicated Right-Corner Undo:** Relocated below the Laya meter with a distinct curved step-back arrow to eliminate any confusion with the restart button.
-- ⚡ **Sticky Settings Action Bar:** Modifying any setting now surfaces a prominent top action bar with an "Unsaved Changes" indicator and immediate Save/Cancel actions.
-- 🎨 **Balanced Color Distribution:** Shuffled 6-color rotation bag guarantees uniform color variety across all shapes.
+- ✨ **Animated Drag-and-Drop Hint:** Fresh games feature a gentle looping tutorial hand and ghost piece illustrating block placement, bringing dynamic motion to browser play.
+- ⚡ **Rock-Solid Laya Cadence Timer:** Engineered robust `requestAnimationFrame` lifecycle and delta-clamping, eliminating timer freeze when undoing moves.
+- 💾 **Compact Settings Action Bar:** Streamlined top action bar with concise `"Save"` action, preventing overflow across small viewports.
+- ↺ **Dedicated Right-Corner Undo:** Positioned neatly below the Laya meter with a distinct curved step-back arrow.
+- 🎨 **Balanced Color Distribution:** Shuffled 6-color rotation bag guarantees uniform color variety across all shapes without green flooding.
 - 🌐 **itch.io Browser Compatibility:** Fully optimized relative asset loading for seamless playback inside itch.io iframes and CDN subpaths.
 
 ---
@@ -71,7 +73,7 @@ Full native localization with zero external fonts or network dependencies:
 ## 📦 Downloads & Links
 
 - **Web Version:** Click **"Run Game"** above to play right in your browser!
-- **Android APK:** Download `Laya-v0.4.4-release.apk` below for install on any Android phone (Android 7.0+).
+- **Android APK:** Download `Laya-v0.4.5-release.apk` below for install on any Android phone (Android 7.0+).
 - **Source Code & GitHub Releases:** [trishul-developers/snapgrid-laya](https://github.com/trishul-developers/snapgrid-laya)
 
 *If you enjoy the game, please leave a rating or comment below! Mindful puzzling!* 🧘‍♀️🧩

@@ -125,6 +125,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Drag-and-Drop Animated Tutorial Hint Overlay -->
+    <div class="tutorial-hint-overlay" id="tutorial-hint-overlay" aria-hidden="true">
+      <div class="tutorial-hint-track">
+        <div class="tutorial-drop-ripple"></div>
+        <div class="tutorial-glider">
+          <div class="tutorial-ghost-piece">
+            <div class="ghost-cell"></div>
+            <div class="ghost-cell"></div>
+            <div class="ghost-cell"></div>
+            <div class="ghost-cell"></div>
+          </div>
+          <div class="tutorial-hand">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="tutorial-hint-pill" data-i18n="drag_hint">Drag blocks to board</div>
+    </div>
   </div>
 
   <!-- Drag Avatar (Positioned 75px above touch/cursor point) -->
@@ -223,7 +247,7 @@
         </div>
         <div class="top-actions-buttons">
           <button class="btn btn-sm btn-outline" id="btn-top-cancel-settings" data-i18n="cancel">Cancel</button>
-          <button class="btn btn-sm btn-primary" id="btn-top-save-settings" data-i18n="save_settings">Save & Apply</button>
+          <button class="btn btn-sm btn-primary" id="btn-top-save-settings" data-i18n="save">Save</button>
         </div>
       </div>
       <div class="dialog-body">

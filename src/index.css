@@ -1199,14 +1199,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       background: var(--md-sys-color-surface-container);
       border: 1.5px solid var(--md-sys-color-primary);
       border-radius: 14px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       animation: slideDownIn 200ms cubic-bezier(0.2, 0, 0, 1);
       margin-bottom: 2px;
+      flex-wrap: nowrap;
     }
 
     .settings-top-actions[hidden] {
@@ -1228,9 +1229,11 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: var(--md-sys-color-on-surface);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .unsaved-dot {
@@ -1262,6 +1265,13 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .top-actions-buttons .btn {
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      white-space: nowrap;
     }
 
     /* Leaderboard Modal Styles */
@@ -1409,5 +1419,165 @@
 
     .app-update-pill .update-action-btn:active {
       transform: scale(0.94);
+    }
+
+    /* Drag-and-Drop Animated Tutorial Hint Overlay */
+    .tutorial-hint-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 40;
+      display: none;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+
+    .tutorial-hint-overlay.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    .tutorial-hint-overlay.fade-out {
+      opacity: 0;
+    }
+
+    .tutorial-hint-track {
+      position: absolute;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 240px;
+      pointer-events: none;
+    }
+
+    .tutorial-drop-ripple {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      border: 2px dashed var(--md-sys-color-primary);
+      box-shadow: 0 0 16px var(--md-sys-color-primary-container);
+      animation: dropRipple 2.6s cubic-bezier(0.2, 0, 0, 1) infinite;
+    }
+
+    @keyframes dropRipple {
+      0%, 55% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+      }
+      68% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      82% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.25);
+      }
+      95%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+      }
+    }
+
+    .tutorial-glider {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: glideTutorial 2.6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    }
+
+    @keyframes glideTutorial {
+      0% {
+        transform: translate(-50%, 0) scale(0.92);
+        opacity: 0;
+      }
+      15% {
+        transform: translate(-50%, 0) scale(1);
+        opacity: 1;
+      }
+      30% {
+        transform: translate(-50%, 0) scale(1.05);
+        opacity: 1;
+      }
+      65% {
+        transform: translate(-50%, -150px) scale(1.05);
+        opacity: 1;
+      }
+      80% {
+        transform: translate(-50%, -150px) scale(1);
+        opacity: 0.9;
+      }
+      95%, 100% {
+        transform: translate(-50%, -150px) scale(0.9);
+        opacity: 0;
+      }
+    }
+
+    .tutorial-ghost-piece {
+      display: grid;
+      grid-template-columns: repeat(2, 22px);
+      grid-template-rows: repeat(2, 22px);
+      gap: 3px;
+      padding: 4px;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1.5px dashed var(--md-sys-color-primary);
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+    }
+
+    .ghost-cell {
+      width: 22px;
+      height: 22px;
+      background: var(--md-sys-color-primary);
+      border-radius: 4px;
+      opacity: 0.85;
+    }
+
+    .tutorial-hand {
+      margin-top: -6px;
+      margin-left: 20px;
+      color: #FFFFFF;
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
+    }
+
+    .tutorial-hint-pill {
+      position: absolute;
+      bottom: 125px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.88);
+      color: #F8FAFC;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(56, 189, 248, 0.25);
+      animation: hintPillPulse 2.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes hintPillPulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateX(-50%) scale(1.05);
+        opacity: 1;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 18px rgba(56, 189, 248, 0.4);
+      }
     }
 

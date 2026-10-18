@@ -1,4 +1,4 @@
-import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, PALETTES } from './game-data.js';
+import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, PALETTES, PALETTE_COLOR_KEYS } from './game-data.js';
 
 (function() {
       'use strict';
@@ -220,6 +220,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.board = [];
           this.boardColors = [];
           this.tray = []; // Array of piece objects or null
+          this.colorBag = []; // Dynamic balanced palette rotation bag
           this.score = 0;
           this.bestScore = 0;
           this.comboStreak = 0;
@@ -380,6 +381,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               board: this.board,
               boardColors: this.boardColors,
               tray: this.tray,
+              colorBag: this.colorBag,
               score: this.score,
               comboStreak: this.comboStreak,
               graceDrops: this.graceDrops,
@@ -418,6 +420,9 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.board = state.board;
             this.boardColors = state.boardColors;
             this.tray = state.tray;
+            if (Array.isArray(state.colorBag)) {
+              this.colorBag = state.colorBag;
+            }
             this.score = Number(state.score) || 0;
             this.comboStreak = Number(state.comboStreak) || 0;
             this.graceDrops = Number(state.graceDrops) || 0;
@@ -559,6 +564,45 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           return pal.colors[category] || '#0EA5E9';
         }
 
+        getPieceColor(piece) {
+          if (!piece) return '#0EA5E9';
+          const key = piece.colorKey || piece.category;
+          return this.getColorForCategory(key);
+        }
+
+        resolveColor(val) {
+          if (!val) return '';
+          if (typeof val === 'string' && (val.startsWith('#') || val.startsWith('rgb'))) {
+            return val;
+          }
+          return this.getColorForCategory(val);
+        }
+
+        getNextColorKey(excludeKeys = []) {
+          const keys = PALETTE_COLOR_KEYS;
+          if (!this.colorBag || this.colorBag.length === 0) {
+            const shuffled = [...keys];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            this.colorBag = shuffled;
+          }
+
+          const candidateIdx = this.colorBag.findIndex(k => !excludeKeys.includes(k));
+          if (candidateIdx !== -1) {
+            const [chosen] = this.colorBag.splice(candidateIdx, 1);
+            return chosen;
+          }
+
+          const available = keys.filter(k => !excludeKeys.includes(k));
+          if (available.length > 0) {
+            return available[Math.floor(Math.random() * available.length)];
+          }
+
+          return this.colorBag.pop() || keys[Math.floor(Math.random() * keys.length)];
+        }
+
         /* ----------------------------------------------------------------------
            Board Initialization & Rendering
            ---------------------------------------------------------------------- */
@@ -593,6 +637,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.speedPeak = 1;
             this.cadenceRemaining = 0;
             this.cadenceActive = false;
+            this.colorBag = [];
 
             this.tray = Array(this.slotCount).fill(null);
             this.refillFullTray();
@@ -648,7 +693,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (!cell) continue;
               if (this.board[r][c] === 1) {
                 cell.className = 'board-cell filled';
-                cell.style.backgroundColor = (this.boardColors[r] && this.boardColors[r][c]) ? this.boardColors[r][c] : 'var(--md-sys-color-primary)';
+                const cellVal = this.boardColors[r] && this.boardColors[r][c];
+                cell.style.backgroundColor = this.resolveColor(cellVal) || 'var(--md-sys-color-primary)';
               } else {
                 cell.className = 'board-cell';
                 cell.style.backgroundColor = '';
@@ -660,7 +706,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         /* ----------------------------------------------------------------------
            Tray & Piece Generation Mechanics
            ---------------------------------------------------------------------- */
-        getRandomPiece() {
+        getRandomPiece(excludeColorKeys = []) {
           const weightedPieces = PIECE_DEFINITIONS.map(piece => {
             const weight = PIECE_SPAWN_WEIGHTS[piece.id];
             if (!Number.isFinite(weight) || weight < 0) {
@@ -685,12 +731,14 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           if (!template) {
             throw new Error('Unable to select a piece from the weighted pool');
           }
+          const colorKey = this.getNextColorKey(excludeColorKeys);
           return {
             id: template.id,
             name: template.name,
             category: template.category,
             matrix: template.matrix.map(row => [...row]),
-            color: this.getColorForCategory(template.category)
+            colorKey: colorKey,
+            color: this.getColorForCategory(colorKey)
           };
         }
 
@@ -702,6 +750,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               ...piece,
               matrix: piece.matrix.map(row => [...row])
             } : null),
+            colorBag: this.colorBag ? [...this.colorBag] : [],
             score: this.score,
             comboStreak: this.comboStreak,
             graceDrops: this.graceDrops,
@@ -735,6 +784,9 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             ...piece,
             matrix: piece.matrix.map(row => [...row])
           } : null);
+          if (previous.colorBag) {
+            this.colorBag = [...previous.colorBag];
+          }
           this.score = previous.score;
           this.comboStreak = previous.comboStreak;
           this.graceDrops = previous.graceDrops;
@@ -760,8 +812,13 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         }
 
         refillFullTray() {
+          const chosenColors = [];
           for (let i = 0; i < this.slotCount; i++) {
-            this.tray[i] = this.getRandomPiece();
+            const piece = this.getRandomPiece(chosenColors);
+            this.tray[i] = piece;
+            if (piece && piece.colorKey) {
+              chosenColors.push(piece.colorKey);
+            }
           }
 
           if (this.mode === 'hard') {
@@ -779,12 +836,17 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                 : fallbackTemplate;
 
               const targetSlot = Math.floor(Math.random() * this.slotCount);
+              const otherColors = this.tray
+                .filter((p, idx) => p && idx !== targetSlot && p.colorKey)
+                .map(p => p.colorKey);
+              const colorKey = this.getNextColorKey(otherColors);
               this.tray[targetSlot] = {
                 id: chosenTemplate.id,
                 name: chosenTemplate.name,
                 category: chosenTemplate.category,
                 matrix: chosenTemplate.matrix.map(row => [...row]),
-                color: this.getColorForCategory(chosenTemplate.category)
+                colorKey: colorKey,
+                color: this.getColorForCategory(colorKey)
               };
             }
           }
@@ -827,7 +889,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                   tile.style.width = `${tileSize}px`;
                   tile.style.height = `${tileSize}px`;
                   if (piece.matrix[r][c] === 1) {
-                    tile.style.backgroundColor = this.getColorForCategory(piece.category);
+                    tile.style.backgroundColor = this.getPieceColor(piece);
                   } else {
                     tile.style.visibility = 'hidden';
                   }
@@ -1351,7 +1413,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               tile.style.width = `${cellWidth}px`;
               tile.style.height = `${cellWidth}px`;
               if (piece.matrix[r][c] === 1) {
-                tile.style.backgroundColor = this.getColorForCategory(piece.category);
+                tile.style.backgroundColor = this.getPieceColor(piece);
               } else {
                 tile.style.visibility = 'hidden';
               }
@@ -1412,7 +1474,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
           if (this.canPieceFitAt(this.draggedPiece, targetRow, targetCol)) {
             // Draw Ghost Cells
-            const categoryColor = this.getColorForCategory(this.draggedPiece.category);
+            const pieceColor = this.getPieceColor(this.draggedPiece);
             for (let pr = 0; pr < rows; pr++) {
               for (let pc = 0; pc < cols; pc++) {
                 if (this.draggedPiece.matrix[pr][pc] === 1) {
@@ -1421,8 +1483,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                   const cell = this.boardEl.children[br * this.gridSize + bc];
                   if (cell) {
                     cell.classList.add('ghost');
-                    cell.style.color = categoryColor;
-                    cell.style.backgroundColor = categoryColor;
+                    cell.style.color = pieceColor;
+                    cell.style.backgroundColor = pieceColor;
                   }
                 }
               }
@@ -1547,14 +1609,14 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
           const rows = piece.matrix.length;
           const cols = piece.matrix[0].length;
-          const color = this.getColorForCategory(piece.category);
+          const colorKey = piece.colorKey || piece.category;
 
           let tileCount = 0;
           for (let pr = 0; pr < rows; pr++) {
             for (let pc = 0; pc < cols; pc++) {
               if (piece.matrix[pr][pc] === 1) {
                 this.board[targetRow + pr][targetCol + pc] = 1;
-                this.boardColors[targetRow + pr][targetCol + pc] = color;
+                this.boardColors[targetRow + pr][targetCol + pc] = colorKey;
                 tileCount++;
               }
             }
@@ -1627,8 +1689,11 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
           // Refill Tray according to game mode
           if (this.mode === 'easy') {
-            // Easy Mode: Instant refill for this specific slot
-            this.tray[slotIdx] = this.getRandomPiece();
+            // Easy Mode: Instant refill for this specific slot with non-duplicate color
+            const activeColors = this.tray
+              .filter((p, idx) => p && idx !== slotIdx && p.colorKey)
+              .map(p => p.colorKey);
+            this.tray[slotIdx] = this.getRandomPiece(activeColors);
           } else {
             // Hard Mode: Batch refill only when ALL slots are empty
             const remainingCount = this.tray.filter(p => p !== null).length;
@@ -1696,7 +1761,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               const cellRect = cell.getBoundingClientRect();
               const particleX = cellRect.left - boardRect.left + cellRect.width / 2;
               const particleY = cellRect.top - boardRect.top + cellRect.height / 2;
-              this.particles.burst(particleX, particleY, this.boardColors[r][c] || '#0EA5E9');
+              this.particles.burst(particleX, particleY, this.resolveColor(this.boardColors[r][c]) || '#0EA5E9');
             }
           });
 
@@ -2199,7 +2264,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
         // Register Service Worker for Offline PWA Support with Over-the-Air Auto-Updates
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          navigator.serviceWorker.register('/sw.js').then((registration) => {
+          navigator.serviceWorker.register('./sw.js').then((registration) => {
             // Actively check for updates on startup & on focus
             registration.update().catch(() => {});
             document.addEventListener('visibilitychange', () => {

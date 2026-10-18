@@ -7,6 +7,7 @@ const {version} = JSON.parse(readFileSync(new URL('./package.json', import.meta.
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [
       tailwindcss(),
       {

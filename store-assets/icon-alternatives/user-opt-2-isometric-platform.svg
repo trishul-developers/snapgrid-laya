@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Squircle Background -->
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0B1120" />
+    </linearGradient>
+
+    <!-- Grid Glow -->
+    <linearGradient id="gridGlow1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0.85" />
+    </linearGradient>
+
+    <!-- Amber Cube Gradients (L-Piece) -->
+    <linearGradient id="ambTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <linearGradient id="ambLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="ambRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D97706" />
+      <stop offset="100%" stop-color="#92400E" />
+    </linearGradient>
+
+    <!-- Emerald Cube Gradients (S-Piece) -->
+    <linearGradient id="emTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6EE7B7" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="emLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="emRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#065F46" />
+    </linearGradient>
+
+    <!-- Reusable Isometric Amber Cube (Origin = bottom-front vertex) -->
+    <g id="cubeL">
+      <polygon points="0,-98 44,-72 0,-46 -44,-72" fill="url(#ambTop)" />
+      <polygon points="-44,-72 0,-46 0,0 -44,-26" fill="url(#ambLeft)" />
+      <polygon points="0,-46 44,-72 44,-26 0,0" fill="url(#ambRight)" />
+      <polyline points="-44,-72 0,-46 44,-72" fill="none" stroke="#FEF08A" stroke-width="1.5" stroke-opacity="0.7" />
+      <line x1="0" y1="-46" x2="0" y2="0" stroke="#FDE047" stroke-width="1.2" stroke-opacity="0.4" />
+    </g>
+
+    <!-- Reusable Isometric Emerald Cube -->
+    <g id="cubeS">
+      <polygon points="0,-98 44,-72 0,-46 -44,-72" fill="url(#emTop)" />
+      <polygon points="-44,-72 0,-46 0,0 -44,-26" fill="url(#emLeft)" />
+      <polygon points="0,-46 44,-72 44,-26 0,0" fill="url(#emRight)" />
+      <polyline points="-44,-72 0,-46 44,-72" fill="none" stroke="#A7F3D0" stroke-width="1.5" stroke-opacity="0.7" />
+      <line x1="0" y1="-46" x2="0" y2="0" stroke="#6EE7B7" stroke-width="1.2" stroke-opacity="0.4" />
+    </g>
+  </defs>
+
+  <!-- App Icon Squircle -->
+  <rect width="512" height="512" rx="115" fill="url(#bg1)" />
+  <rect x="4" y="4" width="504" height="504" rx="111" fill="none" stroke="#334155" stroke-width="2" stroke-opacity="0.5" />
+
+  <!-- Isometric Base Platform (4x4 Matrix) -->
+  <polygon points="256,196 432,300 256,404 80,300" fill="#0F172A" stroke="#38BDF8" stroke-width="3" stroke-opacity="0.7" />
+  <!-- Platform Thickness -->
+  <polygon points="80,300 256,404 256,420 80,316" fill="#0284C7" fill-opacity="0.5" />
+  <polygon points="432,300 256,404 256,420 432,316" fill="#0369A1" fill-opacity="0.7" />
+
+  <!-- Isometric Grid Lines -->
+  <g stroke="url(#gridGlow1)" stroke-width="1.8">
+    <!-- Along GX -->
+    <line x1="212" y1="222" x2="388" y2="326" />
+    <line x1="168" y1="248" x2="344" y2="352" />
+    <line x1="124" y1="274" x2="300" y2="378" />
+    <!-- Along GY -->
+    <line x1="300" y1="222" x2="124" y2="326" />
+    <line x1="344" y1="248" x2="168" y2="352" />
+    <line x1="388" y1="274" x2="212" y2="378" />
+  </g>
+
+  <!-- Ambient Floor Shadow Under Pieces -->
+  <polygon points="212,222 300,274 212,326 168,300" fill="#000000" fill-opacity="0.45" />
+  <polygon points="300,274 388,326 256,404 168,352" fill="#000000" fill-opacity="0.45" />
+
+  <!-- PAINTER'S ALGORITHM LAYERED CUBES -->
+  <!-- L-Piece Stem Base & Vertical Stack at (gx=0, gy=1, gz=0,1,2) -->
+  <use href="#cubeL" transform="translate(212, 274)" />
+  <use href="#cubeL" transform="translate(212, 228)" />
+  <use href="#cubeL" transform="translate(212, 182)" />
+
+  <!-- L-Piece Foot at (gx=1, gy=1, gz=0) -->
+  <use href="#cubeL" transform="translate(256, 300)" />
+
+  <!-- S-Piece Back Row: (gx=2, gy=1) & (gx=1, gy=2) -->
+  <use href="#cubeS" transform="translate(300, 326)" />
+  <use href="#cubeS" transform="translate(212, 326)" />
+
+  <!-- S-Piece Front Row: (gx=3, gy=1) & (gx=2, gy=2) -->
+  <use href="#cubeS" transform="translate(344, 352)" />
+  <use href="#cubeS" transform="translate(256, 352)" />
+</svg>

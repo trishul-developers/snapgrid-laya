@@ -2,43 +2,50 @@
   <defs>
     <!-- Background Gradient -->
     <linearGradient id="bgBanner" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0B0F1A" />
-      <stop offset="45%" stop-color="#0F172A" />
-      <stop offset="100%" stop-color="#03060C" />
+      <stop offset="0%" stop-color="#05070C" />
+      <stop offset="50%" stop-color="#0B0F19" />
+      <stop offset="100%" stop-color="#030508" />
     </linearGradient>
 
-    <!-- Radial Ambient Lights -->
-    <radialGradient id="leftGlow" cx="20%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.32" />
+    <!-- Ambient Neon Lights -->
+    <radialGradient id="leftGlow" cx="22%" cy="50%" r="48%">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.25" />
       <stop offset="100%" stop-color="#000000" stop-opacity="0" />
     </radialGradient>
-    <radialGradient id="rightGlow" cx="80%" cy="40%" r="55%">
-      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.28" />
+    <radialGradient id="cyanGlow" cx="30%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="amberGlow" cx="15%" cy="35%" r="35%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.2" />
       <stop offset="100%" stop-color="#000000" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Block Gradients -->
-    <linearGradient id="gAmber" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FDE047" /><stop offset="100%" stop-color="#D97706" />
+    <!-- Tri-Color Laya Cadence Meter Gradient -->
+    <linearGradient id="layaFlowBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="50%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#06B6D4" />
     </linearGradient>
-    <linearGradient id="gCyan" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38BDF8" /><stop offset="100%" stop-color="#0284C7" />
-    </linearGradient>
-    <linearGradient id="gRose" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FB7185" /><stop offset="100%" stop-color="#E11D48" />
-    </linearGradient>
-    <linearGradient id="gEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#34D399" /><stop offset="100%" stop-color="#059669" />
-    </linearGradient>
-    <linearGradient id="gViolet" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#C084FC" /><stop offset="100%" stop-color="#7C3AED" />
-    </linearGradient>
+
+    <!-- Isometric Neon Cubes (Aligned with Icon Option 3) -->
+    <g id="fgNeonL">
+      <polygon points="0,-98 44,-72 0,-46 -44,-72" fill="#F59E0B" fill-opacity="0.9" stroke="#FEF08A" stroke-width="2" />
+      <polygon points="-44,-72 0,-46 0,0 -44,-26" fill="#D97706" fill-opacity="0.8" stroke="#FBBF24" stroke-width="1.5" />
+      <polygon points="0,-46 44,-72 44,-26 0,0" fill="#92400E" fill-opacity="0.9" stroke="#F59E0B" stroke-width="1.5" />
+    </g>
+
+    <g id="fgNeonS">
+      <polygon points="0,-98 44,-72 0,-46 -44,-72" fill="#06B6D4" fill-opacity="0.9" stroke="#CFFAFE" stroke-width="2" />
+      <polygon points="-44,-72 0,-46 0,0 -44,-26" fill="#0891B2" fill-opacity="0.8" stroke="#22D3EE" stroke-width="1.5" />
+      <polygon points="0,-46 44,-72 44,-26 0,0" fill="#155E75" fill-opacity="0.9" stroke="#06B6D4" stroke-width="1.5" />
+    </g>
 
     <filter id="fShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.7" />
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.75" />
     </filter>
     <filter id="glowF" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="4" result="b" />
+      <feGaussianBlur stdDeviation="5" result="b" />
       <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
   </defs>
@@ -46,104 +53,121 @@
   <!-- Banner Background -->
   <rect width="1024" height="500" fill="url(#bgBanner)" />
   <rect width="1024" height="500" fill="url(#leftGlow)" />
-  <rect width="1024" height="500" fill="url(#rightGlow)" />
+  <rect width="1024" height="500" fill="url(#cyanGlow)" />
+  <rect width="1024" height="500" fill="url(#amberGlow)" />
 
-  <!-- Subtle Background Grid Pattern -->
-  <g opacity="0.05" stroke="#FFFFFF" stroke-width="1.5">
-    <line x1="0" y1="50" x2="1024" y2="50" />
-    <line x1="0" y1="100" x2="1024" y2="100" />
-    <line x1="0" y1="150" x2="1024" y2="150" />
-    <line x1="0" y1="200" x2="1024" y2="200" />
-    <line x1="0" y1="250" x2="1024" y2="250" />
-    <line x1="0" y1="300" x2="1024" y2="300" />
-    <line x1="0" y1="350" x2="1024" y2="350" />
-    <line x1="0" y1="400" x2="1024" y2="400" />
+  <!-- Subtle Blueprint Matrix Grid Lines -->
+  <g opacity="0.04" stroke="#FFFFFF" stroke-width="1.5">
+    <line x1="0" y1="50" x2="1024" y2="50" /><line x1="0" y1="100" x2="1024" y2="100" />
+    <line x1="0" y1="150" x2="1024" y2="150" /><line x1="0" y1="200" x2="1024" y2="200" />
+    <line x1="0" y1="250" x2="1024" y2="250" /><line x1="0" y1="300" x2="1024" y2="300" />
+    <line x1="0" y1="350" x2="1024" y2="350" /><line x1="0" y1="400" x2="1024" y2="400" />
     <line x1="0" y1="450" x2="1024" y2="450" />
   </g>
 
-  <!-- Left Side: Floating 3D Polyomino Cluster -->
-  <g filter="url(#fShadow)" transform="translate(60, 110) rotate(-6)">
-    <!-- 2x2 Amber Square -->
-    <rect x="0" y="0" width="110" height="110" rx="18" fill="url(#gAmber)" />
-    <!-- Cyan L-Piece -->
-    <rect x="130" y="0" width="50" height="50" rx="12" fill="url(#gCyan)" />
-    <rect x="130" y="60" width="50" height="50" rx="12" fill="url(#gCyan)" />
-    <rect x="190" y="60" width="50" height="50" rx="12" fill="url(#gCyan)" />
-    <!-- Rose 1x3 Bar -->
-    <rect x="0" y="130" width="50" height="110" rx="14" fill="url(#gRose)" />
-    <!-- Emerald Z Piece -->
-    <rect x="70" y="130" width="50" height="50" rx="12" fill="url(#gEmerald)" />
-    <rect x="130" y="130" width="50" height="50" rx="12" fill="url(#gEmerald)" />
-    <rect x="130" y="190" width="50" height="50" rx="12" fill="url(#gEmerald)" />
-    <rect x="190" y="190" width="50" height="50" rx="12" fill="url(#gEmerald)" />
+  <!-- Left Hero: Option 3 Isometric Platform with L & S Pieces & Laya Meter -->
+  <g filter="url(#fShadow)" transform="translate(195, 235) scale(0.88) translate(-256, -260)">
+    <!-- Isometric Neon Floor Matrix -->
+    <polygon points="256,184 432,288 256,392 80,288" fill="#0B0F19" stroke="#EC4899" stroke-width="3" stroke-opacity="0.85" />
+    <g stroke="#38BDF8" stroke-width="1.4" stroke-opacity="0.45">
+      <line x1="212" y1="210" x2="388" y2="314" />
+      <line x1="168" y1="236" x2="344" y2="340" />
+      <line x1="124" y1="262" x2="300" y2="366" />
+      <line x1="300" y1="210" x2="124" y2="314" />
+      <line x1="344" y1="236" x2="168" y2="340" />
+      <line x1="388" y1="262" x2="212" y2="366" />
+    </g>
+
+    <!-- Standing Neon L-Piece (Amber) -->
+    <use href="#fgNeonL" transform="translate(212, 262)" />
+    <use href="#fgNeonL" transform="translate(212, 216)" />
+    <use href="#fgNeonL" transform="translate(212, 170)" />
+    <use href="#fgNeonL" transform="translate(256, 288)" />
+
+    <!-- Flat Interlocking Neon S-Piece (Cyan) -->
+    <use href="#fgNeonS" transform="translate(300, 314)" />
+    <use href="#fgNeonS" transform="translate(212, 314)" />
+    <use href="#fgNeonS" transform="translate(344, 340)" />
+    <use href="#fgNeonS" transform="translate(256, 340)" />
+
+    <!-- Signature "Laya Rhythm Meter" Bar -->
+    <g transform="translate(116, 428)">
+      <rect width="280" height="14" rx="7" fill="#131B2E" stroke="#1E293B" stroke-width="1.5" />
+      <rect width="215" height="14" rx="7" fill="url(#layaFlowBar)" />
+      <circle cx="215" cy="7" r="8" fill="#FFFFFF" filter="url(#glowF)" />
+    </g>
   </g>
 
-  <!-- Center Typography & Branding -->
-  <g transform="translate(370, 100)">
-    <!-- Version & Offline Pill -->
+  <!-- Center-Right Branding & Marketing Content -->
+  <g transform="translate(435, 75)">
+    <!-- Pill Badges -->
     <g transform="translate(0, 0)">
-      <rect x="0" y="0" width="170" height="28" rx="14" fill="rgba(56, 189, 248, 0.15)" stroke="#38BDF8" stroke-width="1.5" />
-      <text x="85" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" fill="#38BDF8" text-anchor="middle" letter-spacing="1">100% OFFLINE • AD-FREE</text>
+      <rect x="0" y="0" width="180" height="30" rx="15" fill="rgba(56, 189, 248, 0.12)" stroke="#38BDF8" stroke-width="1.5" />
+      <text x="90" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#38BDF8" text-anchor="middle" letter-spacing="1.2">100% OFFLINE • NO ADS</text>
 
-      <rect x="180" y="0" width="140" height="28" rx="14" fill="rgba(168, 85, 247, 0.15)" stroke="#A855F7" stroke-width="1.5" />
-      <text x="250" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" fill="#C084FC" text-anchor="middle" letter-spacing="0.5">11 LANGUAGES</text>
+      <rect x="195" y="0" width="150" height="30" rx="15" fill="rgba(236, 72, 153, 0.12)" stroke="#EC4899" stroke-width="1.5" />
+      <text x="270" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#F472B6" text-anchor="middle" letter-spacing="0.8">11 LANGUAGES</text>
+
+      <rect x="360" y="0" width="125" height="30" rx="15" fill="rgba(245, 158, 11, 0.12)" stroke="#F59E0B" stroke-width="1.5" />
+      <text x="422" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#FBBF24" text-anchor="middle" letter-spacing="0.8">VERSION 0.4.0</text>
     </g>
 
     <!-- Main Title: LAYA SNAPGRID -->
-    <text x="0" y="90" font-family="system-ui, -apple-system, sans-serif" font-size="58" font-weight="900" fill="#FFFFFF" letter-spacing="2">
+    <text x="0" y="98" font-family="system-ui, -apple-system, sans-serif" font-size="62" font-weight="900" fill="#FFFFFF" letter-spacing="1.5">
       LAYA <tspan fill="#38BDF8">SNAPGRID</tspan>
     </text>
 
     <!-- Sanskrit & Subtitle -->
-    <text x="0" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" letter-spacing="0.5">
-      लय • The Mindful Indian Block Puzzle
+    <text x="0" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" letter-spacing="0.5">
+      लय • The Mindful Sanskrit Block Puzzle
     </text>
 
-    <!-- Feature Highlights List -->
-    <g transform="translate(0, 165)" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#E2E8F0">
-      <!-- Bullet 1 -->
-      <circle cx="8" cy="8" r="4.5" fill="#F59E0B" />
-      <text x="24" y="13">Adaptive Boards: 8×8, 10×10 &amp; 12×12 Grids</text>
+    <!-- Feature Highlights Matrix -->
+    <g transform="translate(0, 180)" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#F1F5F9">
+      <!-- Feature 1 -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="-3" width="26" height="26" rx="8" fill="rgba(245, 158, 11, 0.15)" stroke="#F59E0B" stroke-width="1.5" />
+        <text x="13" y="15" font-size="13" fill="#F59E0B" text-anchor="middle" font-weight="900">▦</text>
+        <text x="36" y="16">Adaptive Grids: 8×8, 10×10 &amp; 12×12</text>
+      </g>
 
-      <!-- Bullet 2 -->
-      <circle cx="8" cy="38" r="4.5" fill="#10B981" />
-      <text x="24" y="43">Dynamic Cadence Speed Flow (⚡ Laya Meter)</text>
+      <!-- Feature 2 -->
+      <g transform="translate(0, 42)">
+        <rect x="0" y="-3" width="26" height="26" rx="8" fill="rgba(236, 72, 153, 0.15)" stroke="#EC4899" stroke-width="1.5" />
+        <text x="13" y="15" font-size="13" fill="#EC4899" text-anchor="middle" font-weight="900">⚡</text>
+        <text x="36" y="16">Dynamic Laya Flow &amp; Cadence Multipliers</text>
+      </g>
 
-      <!-- Bullet 3 -->
-      <circle cx="8" cy="68" r="4.5" fill="#EC4899" />
-      <text x="24" y="73">Tactile Material 3 Themes &amp; Custom Color Palettes</text>
+      <!-- Feature 3 -->
+      <g transform="translate(0, 84)">
+        <rect x="0" y="-3" width="26" height="26" rx="8" fill="rgba(6, 182, 212, 0.15)" stroke="#06B6D4" stroke-width="1.5" />
+        <text x="13" y="15" font-size="13" fill="#06B6D4" text-anchor="middle" font-weight="900">🎨</text>
+        <text x="36" y="16">Material 3 Palettes: Cyber Neon &amp; Terracotta</text>
+      </g>
 
-      <!-- Bullet 4 -->
-      <circle cx="8" cy="98" r="4.5" fill="#3B82F6" />
-      <text x="24" y="103">Zero Tracking, Instant Launch, Battery Optimized</text>
+      <!-- Feature 4 -->
+      <g transform="translate(0, 126)">
+        <rect x="0" y="-3" width="26" height="26" rx="8" fill="rgba(16, 185, 129, 0.15)" stroke="#10B981" stroke-width="1.5" />
+        <text x="13" y="15" font-size="13" fill="#10B981" text-anchor="middle" font-weight="900">🛡</text>
+        <text x="36" y="16">Zero Tracking • Zero Ads • Battery Optimized</text>
+      </g>
+    </g>
+
+    <!-- Bottom Regional Callout -->
+    <g transform="translate(0, 360)">
+      <rect x="0" y="0" width="530" height="34" rx="10" fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+      <text x="16" y="22" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#94A3B8">
+        🇮🇳 11 Regional Languages: हिन्दी • தமிழ் • తెలుగు • ಕನ್ನಡ • മലയാളം • मराठी • বাংলা • ગુજરાતી...
+      </text>
     </g>
   </g>
 
-  <!-- Right Side: Glowing Dissolving Polyominos (Laya Dissolution) -->
-  <g filter="url(#fShadow)" transform="translate(820, 140) rotate(12)">
-    <!-- 3x3 Cross (Violet) -->
-    <rect x="40" y="0" width="40" height="40" rx="10" fill="url(#gViolet)" />
-    <rect x="0" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
-    <rect x="40" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
-    <rect x="80" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
-    <rect x="40" y="80" width="40" height="40" rx="10" fill="url(#gViolet)" />
-
-    <!-- 2-step Staircase (Emerald) -->
-    <rect x="20" y="140" width="40" height="40" rx="10" fill="url(#gEmerald)" />
-    <rect x="60" y="140" width="40" height="40" rx="10" fill="url(#gEmerald)" />
-    <rect x="60" y="180" width="40" height="40" rx="10" fill="url(#gEmerald)" />
-    <rect x="100" y="180" width="40" height="40" rx="10" fill="url(#gEmerald)" />
-  </g>
-
-  <!-- Dissolution Particles Scattered Across Graphic -->
-  <g filter="url(#glowF)" opacity="0.85">
-    <circle cx="280" cy="120" r="4.5" fill="#38BDF8" />
-    <circle cx="320" cy="80" r="3" fill="#A855F7" />
-    <circle cx="760" cy="110" r="5" fill="#F59E0B" />
-    <circle cx="800" cy="85" r="3.5" fill="#FB7185" />
-    <circle cx="780" cy="380" r="4.5" fill="#34D399" />
-    <circle cx="850" cy="420" r="6" fill="#38BDF8" />
-    <circle cx="940" cy="320" r="4" fill="#FDE047" />
-    <circle cx="160" cy="420" r="5" fill="#A855F7" />
+  <!-- Ambient Sparkles -->
+  <g filter="url(#glowF)" opacity="0.8">
+    <circle cx="90" cy="110" r="3.5" fill="#F59E0B" />
+    <circle cx="340" cy="80" r="4" fill="#06B6D4" />
+    <circle cx="380" cy="420" r="3" fill="#EC4899" />
+    <circle cx="980" cy="180" r="4.5" fill="#38BDF8" />
+    <circle cx="940" cy="420" r="3.5" fill="#F59E0B" />
   </g>
 </svg>

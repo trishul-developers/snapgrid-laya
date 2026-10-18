@@ -2,7 +2,7 @@
 
 **App Name:** Laya - Mindful Block Puzzle (लय)  
 **Package / Application ID:** `com.laya.snapgrid`  
-**Current Version:** `0.4.0` (`versionCode`: `4000`)  
+**Current Version:** `0.4.1` (`versionCode`: `4001`)  
 **License:** Open Source (MIT)  
 **Monetization:** 100% Free • Zero Ads • No In-App Purchases • No Paywalls  
 
@@ -146,7 +146,7 @@ All assets are pre-rendered in your repository at [`store-assets/`](file:///e:/P
 - **Portal:** [itch.io New Project](https://itch.io/game/new)
 - **Classification:** `Game`
 - **Kind of Project:** `HTML` (Playable in browser)
-- **Upload 1 (Web):** Upload `dist/` zipped as `laya-webapp-v0.4.0.zip`.
+- **Upload 1 (Web):** Upload `dist/` zipped as `laya-webapp-v0.4.1.zip`.
   - Check: *"This file will be played in the browser"*
   - Embed size: `480` × `850` (Orientation: Portrait)
   - Enable fullscreen button: Yes

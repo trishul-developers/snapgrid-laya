@@ -65,7 +65,7 @@
     <line x1="0" y1="450" x2="1024" y2="450" />
   </g>
 
-  <!-- Left Hero: Option 3 Isometric Platform with L & S Pieces & Laya Meter -->
+  <!-- Left Hero: Option 3 Isometric Platform with L and S Pieces and Laya Meter -->
   <g filter="url(#fShadow)" transform="translate(195, 235) scale(0.88) translate(-256, -260)">
     <!-- Isometric Neon Floor Matrix -->
     <polygon points="256,184 432,288 256,392 80,288" fill="#0B0F19" stroke="#EC4899" stroke-width="3" stroke-opacity="0.85" />
@@ -98,18 +98,15 @@
     </g>
   </g>
 
-  <!-- Center-Right Branding & Marketing Content -->
+  <!-- Center-Right Branding and Marketing Content -->
   <g transform="translate(435, 75)">
     <!-- Pill Badges -->
     <g transform="translate(0, 0)">
-      <rect x="0" y="0" width="180" height="30" rx="15" fill="rgba(56, 189, 248, 0.12)" stroke="#38BDF8" stroke-width="1.5" />
-      <text x="90" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#38BDF8" text-anchor="middle" letter-spacing="1.2">100% OFFLINE • NO ADS</text>
+      <rect x="0" y="0" width="190" height="30" rx="15" fill="rgba(56, 189, 248, 0.12)" stroke="#38BDF8" stroke-width="1.5" />
+      <text x="95" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#38BDF8" text-anchor="middle" letter-spacing="1.2">100% OFFLINE • NO ADS</text>
 
-      <rect x="195" y="0" width="150" height="30" rx="15" fill="rgba(236, 72, 153, 0.12)" stroke="#EC4899" stroke-width="1.5" />
-      <text x="270" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#F472B6" text-anchor="middle" letter-spacing="0.8">11 LANGUAGES</text>
-
-      <rect x="360" y="0" width="125" height="30" rx="15" fill="rgba(245, 158, 11, 0.12)" stroke="#F59E0B" stroke-width="1.5" />
-      <text x="422" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#FBBF24" text-anchor="middle" letter-spacing="0.8">VERSION 0.4.0</text>
+      <rect x="205" y="0" width="165" height="30" rx="15" fill="rgba(236, 72, 153, 0.12)" stroke="#EC4899" stroke-width="1.5" />
+      <text x="287" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="900" fill="#F472B6" text-anchor="middle" letter-spacing="0.8">11 LANGUAGES</text>
     </g>
 
     <!-- Main Title: LAYA SNAPGRID -->
@@ -117,7 +114,7 @@
       LAYA <tspan fill="#38BDF8">SNAPGRID</tspan>
     </text>
 
-    <!-- Sanskrit & Subtitle -->
+    <!-- Sanskrit and Subtitle -->
     <text x="0" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" letter-spacing="0.5">
       लय • The Mindful Sanskrit Block Puzzle
     </text>

@@ -4,8 +4,9 @@ import { execFileSync } from 'child_process';
 
 const baseDir = path.resolve('.');
 const chrome = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const distCssPath = path.join(baseDir, 'dist', 'assets', 'index-B97B5UXE.css');
-const cssContent = fs.readFileSync(distCssPath, 'utf8');
+const distAssetsDir = path.join(baseDir, 'dist', 'assets');
+const cssFile = fs.readdirSync(distAssetsDir).find(f => f.endsWith('.css'));
+const cssContent = fs.readFileSync(path.join(distAssetsDir, cssFile), 'utf8');
 
 // Helper to create an HTML page for inner screen capture (at 776x1396)
 function generateInnerHtml({
@@ -219,7 +220,7 @@ function generateInnerHtml({
         <div class="brand-title">
           <span class="laya-brand">LAYA</span>
           <span class="snapgrid-pill">SNAPGRID</span>
-          <span class="version-badge">v0.4.0</span>
+          <span class="version-badge">v0.4.1</span>
           <span class="m3-tag">${gridSize}x${gridSize}</span>
         </div>
         <div class="mode-subtext">
@@ -276,6 +277,14 @@ function generateInnerHtml({
 </html>`;
 }
 
+function escapeXml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 // Helper to wrap inner screen image into 1080x1920 store marketing SVG
 function generateMarketingSvg({
   accentColor = '#38BDF8',
@@ -309,17 +318,17 @@ function generateMarketingSvg({
     <!-- Pill Badge -->
     <g transform="translate(540, 0)">
       <rect x="-160" y="0" width="320" height="42" rx="21" fill="rgba(255, 255, 255, 0.08)" stroke="${accentColor}" stroke-width="2" />
-      <text x="0" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="${accentColor}" text-anchor="middle" letter-spacing="1.5">${badgeText}</text>
+      <text x="0" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="${accentColor}" text-anchor="middle" letter-spacing="1.5">${escapeXml(badgeText)}</text>
     </g>
 
     <!-- Big Headline -->
     <text x="540" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
-      ${title}
+      ${escapeXml(title)}
     </text>
 
     <!-- Subtitle -->
     <text x="540" y="152" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" text-anchor="middle">
-      ${subtitle}
+      ${escapeXml(subtitle)}
     </text>
   </g>
 

@@ -1,0 +1,104 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+      <defs>
+        <linearGradient id="bgCanvas" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#070A12" />
+          <stop offset="50%" stop-color="#0B0F1C" />
+          <stop offset="100%" stop-color="#020408" />
+        </linearGradient>
+        <radialGradient id="headerGlow" cx="50%" cy="15%" r="45%">
+          <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="gAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FDE047" /><stop offset="100%" stop-color="#D97706" />
+        </linearGradient>
+      </defs>
+
+      <!-- Background Base -->
+      <rect width="1080" height="1920" fill="url(#bgCanvas)" />
+      <rect width="1080" height="600" fill="url(#headerGlow)" />
+
+      <!-- Top Marketing Header Section -->
+      <g transform="translate(0, 110)">
+        <!-- Pill Badge -->
+        <g transform="translate(540, 0)">
+          <rect x="-140" y="0" width="280" height="40" rx="20" fill="rgba(255, 255, 255, 0.08)" stroke="#F59E0B" stroke-width="2" />
+          <text x="0" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="#F59E0B" text-anchor="middle" letter-spacing="1.5">⚡ SPEED FLOW MULTIPLIERS</text>
+        </g>
+
+        <!-- Big Headline -->
+        <text x="540" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+          DYNAMIC LAYA CADENCE FLOW
+        </text>
+
+        <!-- Subtitle -->
+        <text x="540" y="152" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" text-anchor="middle">
+          Place Within 4.0s For Peak Speed & Multiplier Streaks
+        </text>
+      </g>
+
+      <!-- Centered Phone Showcase Frame -->
+      
+    <g transform="translate(140, 360)">
+      <!-- Phone Outer Shell -->
+      <rect x="0" y="0" width="800" height="1420" rx="64" fill="#020408" stroke="#334155" stroke-width="6" />
+      <rect x="12" y="12" width="776" height="1396" rx="54" fill="#090D16" />
+      
+      <!-- Dynamic Island / Speaker Notch -->
+      <rect x="290" y="24" width="220" height="32" rx="16" fill="#020408" />
+      <circle cx="470" cy="40" r="6" fill="#1E293B" />
+
+      <!-- Screen Content Clip -->
+      <g transform="translate(24, 76)">
+        
+      <!-- Header -->
+      <text x="30" y="45" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#FFFFFF">LAYA <tspan fill="#F59E0B">CADENCE</tspan></text>
+      
+      <!-- Cadence Bar Active -->
+      <g transform="translate(20, 70)">
+        <rect width="712" height="150" rx="24" fill="#131B2E" stroke="#F59E0B" stroke-width="3" />
+        <text x="50" y="50" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#94A3B8">SCORE</text>
+        <text x="50" y="92" font-family="system-ui, sans-serif" font-size="42" font-weight="900" fill="#FFFFFF">6,420</text>
+
+        <!-- Speed Flow Badge -->
+        <rect x="250" y="45" width="200" height="42" rx="21" fill="#F59E0B" />
+        <text x="350" y="72" font-family="system-ui, sans-serif" font-size="17" font-weight="900" fill="#000000" text-anchor="middle">⚡ LAYA FLOW ×4</text>
+
+        <rect x="470" y="45" width="130" height="42" rx="21" fill="#10B981" />
+        <text x="535" y="72" font-family="system-ui, sans-serif" font-size="16" font-weight="900" fill="#FFFFFF" text-anchor="middle">Combo ×5</text>
+
+        <!-- Laya Meter Track -->
+        <rect x="50" y="115" width="612" height="14" rx="7" fill="#090D16" />
+        <rect x="50" y="115" width="480" height="14" rx="7" fill="url(#gAmber)" />
+      </g>
+
+      <!-- Active Board with Particle Dissolution -->
+      <g transform="translate(36, 250)">
+        <rect width="680" height="680" rx="24" fill="#0B101E" stroke="#1E293B" stroke-width="2" />
+        <rect x="16" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="211" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="341" y="16" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="471" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="601" y="16" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="211" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="341" y="81" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="471" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="601" y="81" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="211" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="341" y="146" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="471" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="601" y="146" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="211" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="211" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="211" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="211" y="211" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="211" width="58" height="58" rx="12" fill="#A855F7"/><rect x="341" y="211" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="211" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="471" y="211" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="211" width="58" height="58" rx="12" fill="#A855F7"/><rect x="601" y="211" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="81" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="146" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="211" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="276" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="341" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="471" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="536" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="601" y="276" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="16" y="341" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="341" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="341" width="58" height="58" rx="12" fill="#A855F7"/><rect x="211" y="341" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="341" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="341" y="341" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="341" width="58" height="58" rx="12" fill="#A855F7"/><rect x="471" y="341" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="341" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="601" y="341" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="406" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="406" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="406" width="58" height="58" rx="12" fill="#38BDF8"/><rect x="211" y="406" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="276" y="406" width="58" height="58" rx="12" fill="#10B981"/><rect x="341" y="406" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="406" width="58" height="58" rx="12" fill="#38BDF8"/><rect x="471" y="406" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="536" y="406" width="58" height="58" rx="12" fill="#10B981"/><rect x="601" y="406" width="58" height="58" rx="12" fill="#A855F7"/><rect x="16" y="471" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="471" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="471" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="211" y="471" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="471" width="58" height="58" rx="12" fill="#A855F7"/><rect x="341" y="471" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="471" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="471" y="471" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="471" width="58" height="58" rx="12" fill="#A855F7"/><rect x="601" y="471" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="16" y="536" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="536" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="536" width="58" height="58" rx="12" fill="#10B981"/><rect x="211" y="536" width="58" height="58" rx="12" fill="#A855F7"/><rect x="276" y="536" width="58" height="58" rx="12" fill="#38BDF8"/><rect x="341" y="536" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="536" width="58" height="58" rx="12" fill="#10B981"/><rect x="471" y="536" width="58" height="58" rx="12" fill="#A855F7"/><rect x="536" y="536" width="58" height="58" rx="12" fill="#38BDF8"/><rect x="601" y="536" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="16" y="601" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="81" y="601" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="146" y="601" width="58" height="58" rx="12" fill="#A855F7"/><rect x="211" y="601" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="276" y="601" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="341" y="601" width="58" height="58" rx="12" fill="#FFFFFF" opacity="0.85"/><rect x="406" y="601" width="58" height="58" rx="12" fill="#A855F7"/><rect x="471" y="601" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/><rect x="536" y="601" width="58" height="58" rx="12" fill="#F59E0B"/><rect x="601" y="601" width="58" height="58" rx="10" fill="#141C2E" opacity="0.6"/>
+        <!-- Floating +600 points popup -->
+        <g transform="translate(340, 290)">
+          <rect x="-80" y="-30" width="160" height="50" rx="25" fill="#F59E0B" />
+          <text x="0" y="4" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#000000" text-anchor="middle">+600 COMBO!</text>
+        </g>
+      </g>
+
+      <!-- Tray -->
+      <g transform="translate(36, 960)">
+        <rect x="0" y="0" width="210" height="180" rx="20" fill="#131B2E"/>
+        <rect x="80" y="65" width="50" height="50" rx="12" fill="#38BDF8"/>
+
+        <rect x="235" y="0" width="210" height="180" rx="20" fill="#131B2E"/>
+        <rect x="285" y="50" width="45" height="45" rx="10" fill="#10B981"/>
+        <rect x="335" y="50" width="45" height="45" rx="10" fill="#10B981"/>
+
+        <rect x="470" y="0" width="210" height="180" rx="20" fill="#131B2E"/>
+        <rect x="540" y="50" width="40" height="85" rx="10" fill="#A855F7"/>
+      </g>
+    
+      </g>
+    </g>
+  
+    </svg>
+  

@@ -1,0 +1,152 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+      <defs>
+        <linearGradient id="bgCanvas" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#070A12" />
+          <stop offset="50%" stop-color="#0B0F1C" />
+          <stop offset="100%" stop-color="#020408" />
+        </linearGradient>
+        <radialGradient id="headerGlow" cx="50%" cy="15%" r="45%">
+          <stop offset="0%" stop-color="#EC4899" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="gAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FDE047" /><stop offset="100%" stop-color="#D97706" />
+        </linearGradient>
+      </defs>
+
+      <!-- Background Base -->
+      <rect width="1080" height="1920" fill="url(#bgCanvas)" />
+      <rect width="1080" height="600" fill="url(#headerGlow)" />
+
+      <!-- Top Marketing Header Section -->
+      <g transform="translate(0, 110)">
+        <!-- Pill Badge -->
+        <g transform="translate(540, 0)">
+          <rect x="-140" y="0" width="280" height="40" rx="20" fill="rgba(255, 255, 255, 0.08)" stroke="#EC4899" stroke-width="2" />
+          <text x="0" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="#EC4899" text-anchor="middle" letter-spacing="1.5">PLAY IN YOUR MOTHER TONGUE</text>
+        </g>
+
+        <!-- Big Headline -->
+        <text x="540" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+          11 INDIAN LANGUAGES
+        </text>
+
+        <!-- Subtitle -->
+        <text x="540" y="152" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" text-anchor="middle">
+          100% Offline Regional Localization
+        </text>
+      </g>
+
+      <!-- Centered Phone Showcase Frame -->
+      
+    <g transform="translate(140, 360)">
+      <!-- Phone Outer Shell -->
+      <rect x="0" y="0" width="800" height="1420" rx="64" fill="#020408" stroke="#334155" stroke-width="6" />
+      <rect x="12" y="12" width="776" height="1396" rx="54" fill="#090D16" />
+      
+      <!-- Dynamic Island / Speaker Notch -->
+      <rect x="290" y="24" width="220" height="32" rx="16" fill="#020408" />
+      <circle cx="470" cy="40" r="6" fill="#1E293B" />
+
+      <!-- Screen Content Clip -->
+      <g transform="translate(24, 76)">
+        
+      <!-- Header in Hindi / English -->
+      <text x="30" y="45" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#FFFFFF">भाषा <tspan fill="#EC4899">LANGUAGE</tspan></text>
+      
+      <!-- Modal Card -->
+      <g transform="translate(20, 80)">
+        <rect width="712" height="1060" rx="28" fill="#131B2E" stroke="#EC4899" stroke-width="2"/>
+        
+        <text x="50" y="60" font-family="system-ui, sans-serif" font-size="26" font-weight="900" fill="#FFFFFF">सेटिंग्स • Settings</text>
+        <text x="50" y="95" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8">100% Offline Indian Localization</text>
+
+        <!-- 11 Language Grid Cards -->
+        <g transform="translate(40, 130)">
+          
+              <g transform="translate(0, 0)">
+                <rect width="300" height="95" rx="18" fill="rgba(236, 72, 153, 0.2)" stroke="#EC4899" stroke-width="3"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#F59E0B">हिन्दी</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Hindi</text>
+                <circle cx="260" cy="48" r="14" fill="#EC4899"/><text x="260" y="53" font-family="system-ui" font-size="14" font-weight="900" fill="#000000" text-anchor="middle">✓</text>
+              </g>
+            
+              <g transform="translate(320, 0)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#38BDF8">தமிழ்</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Tamil</text>
+                
+              </g>
+            
+              <g transform="translate(0, 115)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#10B981">తెలుగు</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Telugu</text>
+                
+              </g>
+            
+              <g transform="translate(320, 115)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#A855F7">ಕನ್ನಡ</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Kannada</text>
+                
+              </g>
+            
+              <g transform="translate(0, 230)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#EC4899">മലയാളം</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Malayalam</text>
+                
+              </g>
+            
+              <g transform="translate(320, 230)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#3B82F6">मराठी</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Marathi</text>
+                
+              </g>
+            
+              <g transform="translate(0, 345)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#F97316">বাংলা</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Bengali</text>
+                
+              </g>
+            
+              <g transform="translate(320, 345)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#14B8A6">ગુજરાતી</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Gujarati</text>
+                
+              </g>
+            
+              <g transform="translate(0, 460)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#EAB308">ਪੰਜਾਬੀ</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Punjabi</text>
+                
+              </g>
+            
+              <g transform="translate(320, 460)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#8B5CF6">संस्कृतम्</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">Sanskrit</text>
+                
+              </g>
+            
+              <g transform="translate(0, 575)">
+                <rect width="300" height="95" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+                <text x="24" y="44" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#64748B">English</text>
+                <text x="24" y="74" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#94A3B8">English</text>
+                
+              </g>
+            
+        </g>
+      </g>
+    
+      </g>
+    </g>
+  
+    </svg>
+  

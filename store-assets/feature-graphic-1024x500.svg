@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgBanner" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F1A" />
+      <stop offset="45%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#03060C" />
+    </linearGradient>
+
+    <!-- Radial Ambient Lights -->
+    <radialGradient id="leftGlow" cx="20%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.32" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="rightGlow" cx="80%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Block Gradients -->
+    <linearGradient id="gAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" /><stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="gCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" /><stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="gRose" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB7185" /><stop offset="100%" stop-color="#E11D48" />
+    </linearGradient>
+    <linearGradient id="gEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" /><stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="gViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" /><stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+
+    <filter id="fShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+    <filter id="glowF" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="b" />
+      <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Banner Background -->
+  <rect width="1024" height="500" fill="url(#bgBanner)" />
+  <rect width="1024" height="500" fill="url(#leftGlow)" />
+  <rect width="1024" height="500" fill="url(#rightGlow)" />
+
+  <!-- Subtle Background Grid Pattern -->
+  <g opacity="0.05" stroke="#FFFFFF" stroke-width="1.5">
+    <line x1="0" y1="50" x2="1024" y2="50" />
+    <line x1="0" y1="100" x2="1024" y2="100" />
+    <line x1="0" y1="150" x2="1024" y2="150" />
+    <line x1="0" y1="200" x2="1024" y2="200" />
+    <line x1="0" y1="250" x2="1024" y2="250" />
+    <line x1="0" y1="300" x2="1024" y2="300" />
+    <line x1="0" y1="350" x2="1024" y2="350" />
+    <line x1="0" y1="400" x2="1024" y2="400" />
+    <line x1="0" y1="450" x2="1024" y2="450" />
+  </g>
+
+  <!-- Left Side: Floating 3D Polyomino Cluster -->
+  <g filter="url(#fShadow)" transform="translate(60, 110) rotate(-6)">
+    <!-- 2x2 Amber Square -->
+    <rect x="0" y="0" width="110" height="110" rx="18" fill="url(#gAmber)" />
+    <!-- Cyan L-Piece -->
+    <rect x="130" y="0" width="50" height="50" rx="12" fill="url(#gCyan)" />
+    <rect x="130" y="60" width="50" height="50" rx="12" fill="url(#gCyan)" />
+    <rect x="190" y="60" width="50" height="50" rx="12" fill="url(#gCyan)" />
+    <!-- Rose 1x3 Bar -->
+    <rect x="0" y="130" width="50" height="110" rx="14" fill="url(#gRose)" />
+    <!-- Emerald Z Piece -->
+    <rect x="70" y="130" width="50" height="50" rx="12" fill="url(#gEmerald)" />
+    <rect x="130" y="130" width="50" height="50" rx="12" fill="url(#gEmerald)" />
+    <rect x="130" y="190" width="50" height="50" rx="12" fill="url(#gEmerald)" />
+    <rect x="190" y="190" width="50" height="50" rx="12" fill="url(#gEmerald)" />
+  </g>
+
+  <!-- Center Typography & Branding -->
+  <g transform="translate(370, 100)">
+    <!-- Version & Offline Pill -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="170" height="28" rx="14" fill="rgba(56, 189, 248, 0.15)" stroke="#38BDF8" stroke-width="1.5" />
+      <text x="85" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" fill="#38BDF8" text-anchor="middle" letter-spacing="1">100% OFFLINE • AD-FREE</text>
+
+      <rect x="180" y="0" width="140" height="28" rx="14" fill="rgba(168, 85, 247, 0.15)" stroke="#A855F7" stroke-width="1.5" />
+      <text x="250" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" fill="#C084FC" text-anchor="middle" letter-spacing="0.5">11 LANGUAGES</text>
+    </g>
+
+    <!-- Main Title: LAYA SNAPGRID -->
+    <text x="0" y="90" font-family="system-ui, -apple-system, sans-serif" font-size="58" font-weight="900" fill="#FFFFFF" letter-spacing="2">
+      LAYA <tspan fill="#38BDF8">SNAPGRID</tspan>
+    </text>
+
+    <!-- Sanskrit & Subtitle -->
+    <text x="0" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#94A3B8" letter-spacing="0.5">
+      लय • The Mindful Indian Block Puzzle
+    </text>
+
+    <!-- Feature Highlights List -->
+    <g transform="translate(0, 165)" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#E2E8F0">
+      <!-- Bullet 1 -->
+      <circle cx="8" cy="8" r="4.5" fill="#F59E0B" />
+      <text x="24" y="13">Adaptive Boards: 8×8, 10×10 &amp; 12×12 Grids</text>
+
+      <!-- Bullet 2 -->
+      <circle cx="8" cy="38" r="4.5" fill="#10B981" />
+      <text x="24" y="43">Dynamic Cadence Speed Flow (⚡ Laya Meter)</text>
+
+      <!-- Bullet 3 -->
+      <circle cx="8" cy="68" r="4.5" fill="#EC4899" />
+      <text x="24" y="73">Tactile Material 3 Themes &amp; Custom Color Palettes</text>
+
+      <!-- Bullet 4 -->
+      <circle cx="8" cy="98" r="4.5" fill="#3B82F6" />
+      <text x="24" y="103">Zero Tracking, Instant Launch, Battery Optimized</text>
+    </g>
+  </g>
+
+  <!-- Right Side: Glowing Dissolving Polyominos (Laya Dissolution) -->
+  <g filter="url(#fShadow)" transform="translate(820, 140) rotate(12)">
+    <!-- 3x3 Cross (Violet) -->
+    <rect x="40" y="0" width="40" height="40" rx="10" fill="url(#gViolet)" />
+    <rect x="0" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
+    <rect x="40" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
+    <rect x="80" y="40" width="40" height="40" rx="10" fill="url(#gViolet)" />
+    <rect x="40" y="80" width="40" height="40" rx="10" fill="url(#gViolet)" />
+
+    <!-- 2-step Staircase (Emerald) -->
+    <rect x="20" y="140" width="40" height="40" rx="10" fill="url(#gEmerald)" />
+    <rect x="60" y="140" width="40" height="40" rx="10" fill="url(#gEmerald)" />
+    <rect x="60" y="180" width="40" height="40" rx="10" fill="url(#gEmerald)" />
+    <rect x="100" y="180" width="40" height="40" rx="10" fill="url(#gEmerald)" />
+  </g>
+
+  <!-- Dissolution Particles Scattered Across Graphic -->
+  <g filter="url(#glowF)" opacity="0.85">
+    <circle cx="280" cy="120" r="4.5" fill="#38BDF8" />
+    <circle cx="320" cy="80" r="3" fill="#A855F7" />
+    <circle cx="760" cy="110" r="5" fill="#F59E0B" />
+    <circle cx="800" cy="85" r="3.5" fill="#FB7185" />
+    <circle cx="780" cy="380" r="4.5" fill="#34D399" />
+    <circle cx="850" cy="420" r="6" fill="#38BDF8" />
+    <circle cx="940" cy="320" r="4" fill="#FDE047" />
+    <circle cx="160" cy="420" r="5" fill="#A855F7" />
+  </g>
+</svg>

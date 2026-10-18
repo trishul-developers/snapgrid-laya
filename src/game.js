@@ -1144,10 +1144,6 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
 
           const btnCloseSettings = document.getElementById('btn-close-settings');
           if (btnCloseSettings) btnCloseSettings.addEventListener('click', () => this.cancelSettings());
-          const btnCancelSettings = document.getElementById('btn-cancel-settings');
-          if (btnCancelSettings) btnCancelSettings.addEventListener('click', () => this.cancelSettings());
-          const btnSaveSettings = document.getElementById('btn-save-settings');
-          if (btnSaveSettings) btnSaveSettings.addEventListener('click', () => this.saveAndApplySettings());
 
           const btnTopCancelSettings = document.getElementById('btn-top-cancel-settings');
           if (btnTopCancelSettings) btnTopCancelSettings.addEventListener('click', () => this.cancelSettings());

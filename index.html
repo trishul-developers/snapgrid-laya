@@ -79,16 +79,17 @@
       <div class="cadence-track" title="Laya Meter">
         <div class="cadence-bar" id="cadence-bar"></div>
       </div>
-      <!-- Undo Action Pill -->
-      <div class="undo-bar-container" id="undo-bar-container">
-        <button class="undo-pill-btn" id="btn-undo" title="Undo" aria-label="Undo the last move" data-i18n-title="undo" data-i18n-aria-label="undo_desc" disabled>
-          <svg viewBox="0 0 24 24" class="undo-icon">
-            <path d="M3 7v6h6"></path>
-            <path d="M5.5 13a8 8 0 1 0 2-5.5L3 12"></path>
-          </svg>
-          <span class="undo-label" data-i18n="undo">Undo Move</span>
-        </button>
-      </div>
+    </div>
+
+    <!-- Undo Action Pill Container (Positioned below Laya Meter in the Right Corner) -->
+    <div class="undo-bar-container" id="undo-bar-container">
+      <button class="undo-pill-btn" id="btn-undo" title="Undo" aria-label="Undo the last move" data-i18n-title="undo" data-i18n-aria-label="undo_desc" disabled>
+        <svg viewBox="0 0 24 24" class="undo-icon" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 14L4 9l5-5"></path>
+          <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"></path>
+        </svg>
+        <span class="undo-label" data-i18n="undo">Undo Move</span>
+      </button>
     </div>
 
     <!-- Main Board Grid Wrapper -->
@@ -447,10 +448,6 @@
           <span class="version-badge">v__APP_VERSION__</span>
           <span>• 100% Offline • Ad-Free</span>
         </div>
-      </div>
-      <div class="dialog-actions">
-        <button class="btn btn-outline" id="btn-cancel-settings" data-i18n="cancel">Cancel</button>
-        <button class="btn btn-primary" id="btn-save-settings" data-i18n="save_settings">Save & Apply</button>
       </div>
     </div>
   </div>

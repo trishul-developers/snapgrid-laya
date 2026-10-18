@@ -35,12 +35,6 @@
         </div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn undo-btn" id="btn-undo" title="Undo" aria-label="Undo the last move" data-i18n-title="undo" data-i18n-aria-label="undo_desc" hidden disabled>
-          <svg viewBox="0 0 24 24">
-            <path d="M3 7v6h6"></path>
-            <path d="M5.5 13a8 8 0 1 0 2-5.5L3 12"></path>
-          </svg>
-        </button>
         <button class="icon-btn" id="btn-leaderboard" title="Leaderboard" aria-label="Leaderboard">
           <svg viewBox="0 0 24 24">
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
@@ -84,6 +78,16 @@
       </div>
       <div class="cadence-track" title="Laya Meter">
         <div class="cadence-bar" id="cadence-bar"></div>
+      </div>
+      <!-- Undo Action Pill -->
+      <div class="undo-bar-container" id="undo-bar-container">
+        <button class="undo-pill-btn" id="btn-undo" title="Undo" aria-label="Undo the last move" data-i18n-title="undo" data-i18n-aria-label="undo_desc" disabled>
+          <svg viewBox="0 0 24 24" class="undo-icon">
+            <path d="M3 7v6h6"></path>
+            <path d="M5.5 13a8 8 0 1 0 2-5.5L3 12"></path>
+          </svg>
+          <span class="undo-label" data-i18n="undo">Undo Move</span>
+        </button>
       </div>
     </div>
 
@@ -210,6 +214,16 @@
         <button class="icon-btn" id="btn-close-settings" aria-label="Close">
           <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
+      </div>
+      <div class="settings-top-actions" id="settings-top-actions" hidden>
+        <div class="settings-unsaved-badge">
+          <span class="unsaved-dot"></span>
+          <span class="unsaved-text" data-i18n="unsaved_changes">Unsaved Changes</span>
+        </div>
+        <div class="top-actions-buttons">
+          <button class="btn btn-sm btn-outline" id="btn-top-cancel-settings" data-i18n="cancel">Cancel</button>
+          <button class="btn btn-sm btn-primary" id="btn-top-save-settings" data-i18n="save_settings">Save & Apply</button>
+        </div>
       </div>
       <div class="dialog-body">
         <!-- Section 1: Game Rules -->

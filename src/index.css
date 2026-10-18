@@ -336,6 +336,65 @@
       will-change: width;
     }
 
+    /* Undo Move Pill Button inside Score Card */
+    .undo-bar-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .undo-bar-container[hidden] {
+      display: none !important;
+    }
+
+    .undo-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 3px 14px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      background: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--elevation-1);
+    }
+
+    .undo-pill-btn .undo-icon {
+      width: 13px;
+      height: 13px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .undo-pill-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .undo-pill-btn.can-undo {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border-color: var(--md-sys-color-primary);
+      opacity: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+    }
+
+    .undo-pill-btn.can-undo:active {
+      transform: scale(0.95);
+    }
+
     /* Main Grid Board Container */
     .board-wrapper {
       position: relative;
@@ -1120,6 +1179,89 @@
       background: transparent;
       border: 1px solid var(--md-sys-color-outline);
       color: var(--md-sys-color-on-surface);
+    }
+
+    .btn.btn-sm {
+      padding: 6px 12px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      border-radius: 999px;
+      flex: none;
+      min-width: unset;
+      line-height: 1.25;
+    }
+
+    /* Sticky Settings Top Action Bar */
+    .settings-top-actions {
+      position: sticky;
+      top: -8px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--md-sys-color-surface-container);
+      border: 1.5px solid var(--md-sys-color-primary);
+      border-radius: 14px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      animation: slideDownIn 200ms cubic-bezier(0.2, 0, 0, 1);
+      margin-bottom: 2px;
+    }
+
+    .settings-top-actions[hidden] {
+      display: none !important;
+    }
+
+    @keyframes slideDownIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .settings-unsaved-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .unsaved-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F43F5E;
+      box-shadow: 0 0 6px #F43F5E;
+      display: inline-block;
+      animation: pulseUnsaved 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseUnsaved {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.35);
+        opacity: 0.7;
+      }
+    }
+
+    .unsaved-text {
+      letter-spacing: 0.02em;
+    }
+
+    .top-actions-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* Leaderboard Modal Styles */

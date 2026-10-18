@@ -268,13 +268,12 @@ export const SCORING_CONFIG = {
           appearance: "Appearance",
           audio_feedback: "Audio & Feedback",
           view_stats: "View Stats",
-          update_available: "புதிய பதிப்பு கிடைக்கிறது!",
-          refresh: "புதுப்பி",
           update_available: "New version available!",
           refresh: "Update",
           game_over_banner: "Game Over • Tap below to play again",
           apply_restart_warning: "Applying new board rules will start a fresh game. Discard current progress and apply?",
           discard_changes: "Discard Changes",
+          unsaved_changes: "Unsaved Changes",
           stats: "Stats"
         },
         hi: {
@@ -349,6 +348,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "खेल समाप्त • पुनः खेलने के लिए नीचे टैप करें",
           apply_restart_warning: "नए नियम लागू करने से नया खेल शुरू होगा। क्या वर्तमान प्रगति छोड़ें?",
           discard_changes: "परिवर्तन रद्द करें",
+          unsaved_changes: "असंरक्षित बदलाव",
           stats: "आंकड़े"
         },
         kn: {
@@ -423,6 +423,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "ಆಟ ಮುಕ್ತಾಯ • ಮತ್ತೆ ಆಡಲು ಕೆಳಗೆ ಟ್ಯಾಪ್ ಮಾಡಿ",
           apply_restart_warning: "ಹೊಸ ನಿಯಮಗಳನ್ನು ಅನ್ವಯಿಸುವುದರಿಂದ ಹೊಸ ಆಟ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಪ್ರಸ್ತುತ ಆಟವನ್ನು ತ್ಯಜಿಸುವುದೇ?",
           discard_changes: "ಬದಲಾವಣೆ ರದ್ದುಮಾಡಿ",
+          unsaved_changes: "ಉಳಿಸದ ಬದಲಾವಣೆಗಳು",
           stats: "ಅಂಕಿಅಂಶಗಳು"
         },
         ta: {
@@ -495,6 +496,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "ஆட்டம் முடிந்தது • மீண்டும் விளையாட கீழே தட்டவும்",
           apply_restart_warning: "புதிய விதிகளைப் பயன்படுத்தினால் புதிய ஆட்டம் தொடங்கும். தற்போதைய நிலையை கைவிடவா?",
           discard_changes: "மாற்றங்களை நிராகரி",
+          unsaved_changes: "சேமிக்கப்படாத மாற்றங்கள்",
           stats: "புள்ளிவிவரம்"
         },
         te: {
@@ -569,6 +571,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "ఆట ముగిసింది • మళ్ళీ ఆడటానికి క్రింద తాకండి",
           apply_restart_warning: "కొత్త నియమాలను వర్తింపజేస్తే కొత్త ఆట ప్రారంభమవుతుంది. ప్రస్తుత ఆటను వదులుకోవాలా?",
           discard_changes: "మార్పులను తీసివేయి",
+          unsaved_changes: "సేవ్ చేయని మార్పులు",
           stats: "గణాంకాలు"
         },
         ml: {
@@ -643,6 +646,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "കളി കഴിഞ്ഞു • വീണ്ടും കളിക്കാൻ താഴെ തൊടുക",
           apply_restart_warning: "പുതിയ നിയമങ്ങൾ പ്രയോഗിച്ചാൽ പുതിയ കളി ആരംഭിക്കും. നിലവിലെ കളി ഉപേക്ഷിക്കണമോ?",
           discard_changes: "മാറ്റങ്ങൾ ഒഴിവാക്കുക",
+          unsaved_changes: "സേവ് ചെയ്യാത്ത മാറ്റങ്ങൾ",
           stats: "സ്ഥിതിവിവരങ്ങൾ"
         },
         mr: {
@@ -717,6 +721,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "खेळ संपला • पुन्हा खेळण्यासाठी खाली टॅप करा",
           apply_restart_warning: "नवीन नियम लागू केल्याने नवीन खेळ सुरू होईल. सध्याचा खेळ रद्द करायचा का?",
           discard_changes: "बदल रद्द करा",
+          unsaved_changes: "अजतन केलेले बदल",
           stats: "आकडेवारी"
         },
         bn: {
@@ -791,6 +796,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "খেলা সমাপ্ত • আবার খেলতে নিচে ট্যাপ করুন",
           apply_restart_warning: "নতুন নিয়ম প্রয়োগ করলে নতুন খেলা শুরু হবে। বর্তমান খেলা বাতিল করবেন?",
           discard_changes: "পরিবর্তন বাতিল করুন",
+          unsaved_changes: "অসংরক্ষিত পরিবর্তন",
           stats: "পরিসংখ্যান"
         },
         gu: {
@@ -865,6 +871,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "રમત સમાપ્ત • ફરી રમવા માટે નીચે ટૅપ કરો",
           apply_restart_warning: "નવા નિયમો લાગુ કરવાથી નવી રમત શરૂ થશે. શું હાલની પ્રગતિ રદ કરવી છે?",
           discard_changes: "ફેરફારો રદ કરો",
+          unsaved_changes: "અણસાચવેલા ફેરફારો",
           stats: "આંકડા"
         },
         pa: {
@@ -939,6 +946,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "ਖੇਡ ਖਤਮ • ਦੁਬਾਰਾ ਖੇਡਣ ਲਈ ਹੇਠਾਂ ਟੈਪ ਕਰੋ",
           apply_restart_warning: "ਨਵੇਂ ਨਿਯਮ ਲਾਗੂ ਕਰਨ ਨਾਲ ਨਵੀਂ ਖੇਡ ਸ਼ੁਰੂ ਹੋਵੇਗੀ। ਕੀ ਮੌਜੂਦਾ ਖੇਡ ਰੱਦ ਕਰਨੀ ਹੈ?",
           discard_changes: "ਤਬਦੀਲੀਆਂ ਰੱਦ ਕਰੋ",
+          unsaved_changes: "ਨਾ-ਸੰਭਾਲੀਆਂ ਤਬਦੀਲੀਆਂ",
           stats: "ਅੰਕੜੇ"
         },
         sa: {
@@ -1013,6 +1021,7 @@ export const SCORING_CONFIG = {
           game_over_banner: "क्रीडा समाप्ता • पुनः क्रीडितुम् अधः स्पृशतु",
           apply_restart_warning: "नूतननियमानां प्रयोगेण नूतनाक्रीडा प्रारप्स्यते। वर्तमाना स्थितिः त्याज्या किम्?",
           discard_changes: "परिवर्तनानि त्यजतु",
+          unsaved_changes: "असंरक्षिताः विकाराः",
           stats: "विवरणम्"
         }
       };

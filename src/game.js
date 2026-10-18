@@ -261,6 +261,8 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           this.gameOverRestartEl = document.getElementById('btn-gameover-restart');
           this.gameoverBannerEl = document.getElementById('gameover-banner');
           this.undoButtonEl = document.getElementById('btn-undo');
+          this.undoContainerEl = document.getElementById('undo-bar-container');
+          this.settingsTopActionsEl = document.getElementById('settings-top-actions');
           this.stagedSettings = null;
           this.initialSettingsSnapshot = null;
           this.pendingConfirmCancel = null;
@@ -764,8 +766,16 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
         }
 
         updateUndoButton() {
-          this.undoButtonEl.hidden = this.mode !== 'easy';
-          this.undoButtonEl.disabled = this.mode !== 'easy' || !this.undoState || this.isGameOver;
+          const isEasy = this.mode === 'easy';
+          const canUndo = isEasy && !!this.undoState && !this.isGameOver;
+          if (this.undoContainerEl) {
+            this.undoContainerEl.hidden = !isEasy;
+          }
+          if (this.undoButtonEl) {
+            this.undoButtonEl.hidden = !isEasy;
+            this.undoButtonEl.disabled = !canUndo;
+            this.undoButtonEl.classList.toggle('can-undo', canUndo);
+          }
         }
 
         undoLastMove() {
@@ -1139,11 +1149,17 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const btnSaveSettings = document.getElementById('btn-save-settings');
           if (btnSaveSettings) btnSaveSettings.addEventListener('click', () => this.saveAndApplySettings());
 
+          const btnTopCancelSettings = document.getElementById('btn-top-cancel-settings');
+          if (btnTopCancelSettings) btnTopCancelSettings.addEventListener('click', () => this.cancelSettings());
+          const btnTopSaveSettings = document.getElementById('btn-top-save-settings');
+          if (btnTopSaveSettings) btnTopSaveSettings.addEventListener('click', () => this.saveAndApplySettings());
+
           const settingLangSelect = document.getElementById('setting-lang-select');
           if (settingLangSelect) {
             settingLangSelect.addEventListener('change', (e) => {
               if (this.stagedSettings) this.stagedSettings.lang = e.target.value;
               this.setLanguage(e.target.value);
+              this.updateSettingsDirtyState();
             });
           }
 
@@ -1209,6 +1225,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (darkBtn) darkBtn.classList.remove('active');
               this.applyTheme('light');
               this.updateThemeIcon();
+              this.updateSettingsDirtyState();
             });
           }
           const segThemeDark = document.getElementById('seg-theme-dark');
@@ -1220,6 +1237,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (lightBtn) lightBtn.classList.remove('active');
               this.applyTheme('dark');
               this.updateThemeIcon();
+              this.updateSettingsDirtyState();
             });
           }
 
@@ -1229,6 +1247,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (this.stagedSettings) this.stagedSettings.sound = e.target.checked;
               sound.enabled = e.target.checked;
               this.updateSoundIcon();
+              this.updateSettingsDirtyState();
             });
           }
 
@@ -1238,6 +1257,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (this.stagedSettings) this.stagedSettings.vibrate = e.target.checked;
               haptics.enabled = e.target.checked;
               this.updateVibrateIcon();
+              this.updateSettingsDirtyState();
             });
           }
 
@@ -1248,6 +1268,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               if (this.stagedSettings) this.stagedSettings.palette = pal;
               document.querySelectorAll('.palette-card').forEach(c => c.classList.toggle('active', c === card));
               this.applyPalette(pal);
+              this.updateSettingsDirtyState();
             });
           });
 
@@ -1264,6 +1285,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
                 this.customColors[cat] = e.target.value;
                 document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('active'));
                 this.applyPalette('custom');
+                this.updateSettingsDirtyState();
               });
             }
           });
@@ -1967,6 +1989,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           };
 
           this.renderSettingsDialog();
+          this.updateSettingsDirtyState();
           document.getElementById('modal-settings').classList.add('open');
         }
 
@@ -2038,6 +2061,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           if (seg8) seg8.classList.toggle('active', size === 8);
           if (seg10) seg10.classList.toggle('active', size === 10);
           if (seg12) seg12.classList.toggle('active', size === 12);
+          this.updateSettingsDirtyState();
         }
 
         stageMode(mode) {
@@ -2053,6 +2077,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const segSlots4 = document.getElementById('seg-slots-4');
           if (segSlots3) segSlots3.classList.toggle('active', this.stagedSettings.slotCount === 3);
           if (segSlots4) segSlots4.classList.toggle('active', this.stagedSettings.slotCount === 4);
+          this.updateSettingsDirtyState();
         }
 
         stageSlots(count) {
@@ -2062,6 +2087,34 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           const segSlots4 = document.getElementById('seg-slots-4');
           if (segSlots3) segSlots3.classList.toggle('active', count === 3);
           if (segSlots4) segSlots4.classList.toggle('active', count === 4);
+          this.updateSettingsDirtyState();
+        }
+
+        checkSettingsDirty() {
+          if (!this.stagedSettings || !this.initialSettingsSnapshot) return false;
+          const s = this.stagedSettings;
+          const init = this.initialSettingsSnapshot;
+          if (s.gridSize !== init.gridSize) return true;
+          if (s.mode !== init.mode) return true;
+          if (s.slotCount !== init.slotCount) return true;
+          if (s.theme !== init.theme) return true;
+          if (s.sound !== init.sound) return true;
+          if (s.vibrate !== init.vibrate) return true;
+          if (s.palette !== init.palette) return true;
+          if (s.lang !== init.lang) return true;
+          if (s.customColors && init.customColors) {
+            const categories = ['dot', 'bar', 'square', 'corner', 'tshape', 'zshape'];
+            for (const cat of categories) {
+              if (s.customColors[cat] !== init.customColors[cat]) return true;
+            }
+          }
+          return false;
+        }
+
+        updateSettingsDirtyState() {
+          if (!this.settingsTopActionsEl) return;
+          const isDirty = this.checkSettingsDirty();
+          this.settingsTopActionsEl.hidden = !isDirty;
         }
 
         cancelSettings() {
@@ -2082,11 +2135,13 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
           }
           this.stagedSettings = null;
           this.initialSettingsSnapshot = null;
+          this.updateSettingsDirtyState();
           this.hideModals();
         }
 
         saveAndApplySettings() {
           if (!this.stagedSettings) {
+            this.updateSettingsDirtyState();
             this.hideModals();
             return;
           }
@@ -2120,6 +2175,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.saveStorage();
             this.stagedSettings = null;
             this.initialSettingsSnapshot = null;
+            this.updateSettingsDirtyState();
             this.hideModals();
             return;
           }
@@ -2137,6 +2193,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
             this.saveStorage();
             this.stagedSettings = null;
             this.initialSettingsSnapshot = null;
+            this.updateSettingsDirtyState();
             this.hideModals();
           };
 
@@ -2156,6 +2213,7 @@ import { SCORING_CONFIG, TRANSLATIONS, PIECE_DEFINITIONS, PIECE_SPAWN_WEIGHTS, P
               this.saveStorage();
               this.stagedSettings = null;
               this.initialSettingsSnapshot = null;
+              this.updateSettingsDirtyState();
             };
             document.getElementById('modal-confirm').classList.add('open');
           }

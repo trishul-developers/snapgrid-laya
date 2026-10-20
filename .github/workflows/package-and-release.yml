@@ -56,13 +56,14 @@ jobs:
           mkdir -p release-artifacts
           cd dist
           zip -r "../release-artifacts/laya-webapp-v${VERSION}.zip" .
+          zip -r "../release-artifacts/laya-webapp.zip" .
           cd ..
 
       - name: Upload WebApp Artifact
         uses: actions/upload-artifact@v4
         with:
           name: webapp
-          path: release-artifacts/laya-webapp-v*.zip
+          path: release-artifacts/laya-webapp*.zip
           retention-days: 30
 
   # =========================================================================
@@ -130,6 +131,7 @@ jobs:
           if [ -f "$APK_PATH" ]; then
             echo "Found APK at: $APK_PATH"
             cp "$APK_PATH" "release-artifacts/Laya-v${VERSION}.apk"
+            cp "$APK_PATH" "release-artifacts/Laya.apk"
           else
             echo "Error: APK not found in outputs directory!"
             exit 1
@@ -139,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: release-artifacts/Laya-v*.apk
+          path: release-artifacts/Laya*.apk
           retention-days: 30
 
   # =========================================================================
@@ -203,15 +205,17 @@ jobs:
           prerelease: false
           files: |
             release-files/Laya-v${{ steps.app_version.outputs.version }}.apk
+            release-files/Laya.apk
             release-files/laya-webapp-v${{ steps.app_version.outputs.version }}.zip
+            release-files/laya-webapp.zip
           body: |
             ## Laya - Snapgrid (${{ steps.release_info.outputs.tag_name }})
 
             *Laya* (लय: Rhythm / Dissolution) is a 100% offline, ad-free mobile & web block puzzle game with 11 Indian localizations.
 
             ### Downloads
-            * **Android APK (`.apk`):** Download `Laya-v${{ steps.app_version.outputs.version }}.apk` directly to your Android device and install.
-            * **Offline WebApp Bundle (`.zip`):** Download `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
+            * **Android APK (`.apk`):** Download [Laya.apk](https://github.com/trishul-developers/snapgrid-laya/releases/latest/download/Laya.apk) (permanent direct link) or `Laya-v${{ steps.app_version.outputs.version }}.apk` directly to your Android device and install.
+            * **Offline WebApp Bundle (`.zip`):** Download [laya-webapp.zip](https://github.com/trishul-developers/snapgrid-laya/releases/latest/download/laya-webapp.zip) (permanent direct link) or `laya-webapp-v${{ steps.app_version.outputs.version }}.zip` to host on any static web server or run locally in any browser.
 
             ### What's New in ${{ steps.release_info.outputs.tag_name }}
             * **Seamless Over-the-Air Updates:** Network-first service worker and in-app update pill allow clean updates without clearing cache or reinstalling.
